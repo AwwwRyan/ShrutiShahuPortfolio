@@ -24,12 +24,13 @@ export default async function AdminLoginPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const { error } = await searchParams;
+  const { error, reset } = await searchParams;
 
   return (
     <main>
       <h1>Admin Login</h1>
       {error && <p role="alert">Invalid email or password.</p>}
+      {reset && <p role="status">Your password has been reset. You can log in now.</p>}
       <form action={loginAction}>
         <label>
           Email
@@ -41,6 +42,9 @@ export default async function AdminLoginPage({
         </label>
         <button type="submit">Log in</button>
       </form>
+      <p>
+        <a href="/admin/forgot-password">Forgot password?</a>
+      </p>
     </main>
   );
 }
