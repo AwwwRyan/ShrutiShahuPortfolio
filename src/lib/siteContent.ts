@@ -4,6 +4,21 @@ export async function getSiteContent() {
   return prisma.siteContent.findUnique({ where: { id: 'singleton' } });
 }
 
+export type SocialLink = { label: string; url: string };
+
+export function parseSocialLinks(value: unknown): SocialLink[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.filter(
+    (item): item is SocialLink =>
+      typeof item === 'object' &&
+      item !== null &&
+      typeof (item as SocialLink).label === 'string' &&
+      typeof (item as SocialLink).url === 'string',
+  );
+}
+
 /** Number of label/url social link slots the admin form renders. */
 export const SOCIAL_LINK_SLOTS = 6;
 

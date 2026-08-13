@@ -1,26 +1,92 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-paper: #f7f5ef;
+  --color-ink: #1c231b;
+
+  --color-teal: #54c9cc;
+  --color-navy-teal: #1f4f5a;
+  --color-olive-sage: #75a08e;
+  --color-chartreuse: #dcd964;
+  --color-near-black-olive: #213502;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-teal: var(--color-teal);
+  --color-navy-teal: var(--color-navy-teal);
+  --color-olive-sage: var(--color-olive-sage);
+  --color-chartreuse: var(--color-chartreuse);
+  --color-near-black-olive: var(--color-near-black-olive);
+  --color-paper: var(--color-paper);
+  --color-ink: var(--color-ink);
+
+  --font-serif: var(--font-fraunces);
+  --font-sans: var(--font-inter);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Visible keyboard focus everywhere, without relying on any one component to opt in */
+:focus-visible {
+  outline: 2px solid var(--color-navy-teal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@keyframes progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+/* Minimal prose styling for Tiptap-produced rich text (aboutMe, project descriptions) */
+.rich-text p {
+  margin-bottom: 1em;
+}
+.rich-text p:last-child {
+  margin-bottom: 0;
+}
+.rich-text ul,
+.rich-text ol {
+  margin: 0 0 1em 1.25em;
+}
+.rich-text ul {
+  list-style: disc;
+}
+.rich-text ol {
+  list-style: decimal;
+}
+.rich-text li {
+  margin-bottom: 0.25em;
+}
+.rich-text strong {
+  font-weight: 600;
+}
+.rich-text a {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
