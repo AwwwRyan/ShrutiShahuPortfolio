@@ -1,17 +1,25 @@
 import { ArrowUpRight, BookOpenCheck, GraduationCap, Newspaper, PenTool, Search, SpellCheck } from 'lucide-react';
 import { Card } from '@/components/Card';
+import { Motif } from '@/components/decor/Motif';
 
 // Only chartreuse/paper are light enough to read as an icon badge fill+stroke against
 // the dark card surface in this palette — alternate between the two for variety.
 const ICON_TONES = ['chartreuse', 'paper'] as const;
 
+// `span` grows the grid pattern in from mobile (always single column, no spans) up through
+// sm (simple 2-col pairing) to lg (the full asymmetric bento) — complexity scales up with
+// available width rather than trying to force the bento shape into a narrow viewport.
 const SERVICES = [
-  { name: 'Content Editing & Proofreading', Icon: SpellCheck },
-  { name: 'Manuscript Editing', Icon: BookOpenCheck },
-  { name: 'Academic Editing', Icon: GraduationCap },
-  { name: 'Writing', Icon: PenTool },
-  { name: 'Digital News Reportage', Icon: Newspaper },
-  { name: 'Research', Icon: Search },
+  {
+    name: 'Content Editing & Proofreading',
+    Icon: SpellCheck,
+    span: 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
+  },
+  { name: 'Manuscript Editing', Icon: BookOpenCheck, span: '' },
+  { name: 'Academic Editing', Icon: GraduationCap, span: 'lg:row-span-2' },
+  { name: 'Writing', Icon: PenTool, span: 'sm:col-span-2 lg:col-span-1' },
+  { name: 'Digital News Reportage', Icon: Newspaper, span: 'sm:col-span-2 lg:col-span-2' },
+  { name: 'Research', Icon: Search, span: 'sm:col-span-2 lg:col-span-2' },
 ] as const;
 
 const ICON_BG: Record<(typeof ICON_TONES)[number], string> = {
@@ -21,14 +29,20 @@ const ICON_BG: Record<(typeof ICON_TONES)[number], string> = {
 
 export function ServicesSection() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-20">
+    <section className="relative mx-auto max-w-6xl px-6 py-20">
+      <Motif type="blob" tone="olive-sage" size={90} depth={2} opacity={0.2} className="top-2 -left-4 hidden lg:block" />
       <h2 className="font-serif text-3xl text-paper sm:text-4xl">Services</h2>
 
-      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map(({ name, Icon }, index) => {
+      <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:grid-flow-dense lg:auto-rows-[10rem]">
+        {SERVICES.map(({ name, Icon, span }, index) => {
           const tone = ICON_TONES[index % ICON_TONES.length];
           return (
-            <Card key={name} href="/contact" tone="paper" className="min-h-[12rem]">
+            <Card
+              key={name}
+              href="/contact"
+              tone="paper"
+              className={`min-h-[12rem] lg:min-h-0 ${span}`}
+            >
               <div className="flex w-full items-start justify-between">
                 <span
                   className={`blob-mask flex h-14 w-14 shrink-0 items-center justify-center ${ICON_BG[tone]}`}

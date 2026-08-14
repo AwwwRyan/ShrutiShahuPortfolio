@@ -6,6 +6,7 @@ import { getProject as getProjectUncached } from '@/lib/projects';
 import { getYouTubeEmbedUrl } from '@/lib/youtube';
 import { PhoneMockup } from '@/components/PhoneMockup';
 import { DocumentLink } from '@/components/DocumentLink';
+import { Motif } from '@/components/decor/Motif';
 
 // Cached per-request so generateMetadata and the page component share one DB call.
 const getProject = cache(getProjectUncached);
@@ -47,7 +48,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const embedUrl = project.videoUrl ? getYouTubeEmbedUrl(project.videoUrl) : null;
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
+    <main className="relative mx-auto max-w-4xl px-6 py-12 sm:py-16">
+      <Motif type="sparkle" tone="chartreuse" size={36} depth={2} opacity={0.35} className="top-2 right-2" />
       <nav aria-label="Breadcrumb" className="text-sm text-paper/60">
         <Link href="/" className="hover:text-chartreuse hover:underline">
           Home

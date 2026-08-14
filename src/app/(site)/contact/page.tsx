@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getSiteContent, parseSocialLinks } from '@/lib/siteContent';
 import { ContactValidationError, validateContactForm } from '@/lib/contact';
 import { sendContactMessage } from '@/lib/email';
+import { Motif } from '@/components/decor/Motif';
 
 // No dynamic API usage of its own — force per-request rendering so contact
 // info changes (via the future Stage 9 admin UI) don't need a rebuild.
@@ -55,7 +56,8 @@ export default async function ContactPage({
   const socialLinks = parseSocialLinks(siteContent?.socialLinks);
 
   return (
-    <main className="mx-auto max-w-2xl px-6 py-12 sm:py-16">
+    <main className="relative mx-auto max-w-2xl px-6 py-12 sm:py-16">
+      <Motif type="blob" tone="chartreuse" size={110} depth={2} opacity={0.15} className="top-0 -right-10 hidden sm:block" />
       <p className="text-sm text-paper/60">
         <Link href="/" className="hover:text-chartreuse hover:underline">
           Home

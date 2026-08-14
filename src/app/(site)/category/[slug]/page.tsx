@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getCategoryBySlug as getCategoryBySlugUncached } from '@/lib/categories';
 import { Card, CATEGORY_TILE_TONES } from '@/components/Card';
+import { Motif } from '@/components/decor/Motif';
 
 // Cached per-request so generateMetadata and the page component share one DB call.
 const getCategoryBySlug = cache(getCategoryBySlugUncached);
@@ -35,7 +36,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category, breadcrumbs, children, projects } = view;
 
   return (
-    <main className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
+    <main className="relative mx-auto max-w-6xl px-6 py-12 sm:py-16">
+      <Motif type="ring" tone="olive-sage" size={70} depth={1} opacity={0.3} className="top-8 right-4 hidden lg:block" />
       <nav aria-label="Breadcrumb" className="text-sm text-paper/60">
         <Link href="/" className="hover:text-chartreuse hover:underline">
           Home

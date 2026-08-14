@@ -1,4 +1,5 @@
 import { SkillChip } from '@/components/SkillChip';
+import { Motif } from '@/components/decor/Motif';
 
 const SKILL_GROUPS = [
   {
@@ -21,7 +22,9 @@ const SKILL_GROUPS = [
 
 export function SkillsSection() {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-20">
+    <section className="relative mx-auto max-w-6xl px-6 py-20">
+      <Motif type="sparkle" tone="paper" size={40} depth={2} opacity={0.4} className="top-6 right-6" />
+      <Motif type="dots" tone="chartreuse" size={70} depth={1} opacity={0.2} className="right-16 bottom-4 hidden lg:block" />
       <h2 className="font-serif text-3xl text-paper sm:text-4xl">Skills & Tools</h2>
 
       <div className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2">
