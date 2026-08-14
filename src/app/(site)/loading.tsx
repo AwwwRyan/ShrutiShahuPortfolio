@@ -20,7 +20,7 @@ export default function HomeLoading() {
           </div>
         </section>
 
-        <section className="bg-olive-sage/15">
+        <section className="border-y border-paper/10 bg-paper/[0.04]">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-6 py-12 sm:grid-cols-4 sm:gap-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex flex-col items-center gap-2">

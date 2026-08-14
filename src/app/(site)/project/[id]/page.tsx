@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { getProject as getProjectUncached } from '@/lib/projects';
 import { getYouTubeEmbedUrl } from '@/lib/youtube';
 import { PhoneMockup } from '@/components/PhoneMockup';
+import { DocumentLink } from '@/components/DocumentLink';
 
 // Cached per-request so generateMetadata and the page component share one DB call.
 const getProject = cache(getProjectUncached);
@@ -47,22 +48,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-12 sm:py-16">
-      <nav aria-label="Breadcrumb" className="text-sm text-ink/60">
-        <Link href="/" className="hover:text-ink hover:underline">
+      <nav aria-label="Breadcrumb" className="text-sm text-paper/60">
+        <Link href="/" className="hover:text-chartreuse hover:underline">
           Home
         </Link>{' '}
         /{' '}
         <Link
           href={`/category/${project.category.slug}`}
-          className="hover:text-ink hover:underline"
+          className="hover:text-chartreuse hover:underline"
         >
           {project.category.name}
         </Link>
       </nav>
 
-      <h1 className="mt-3 font-serif text-4xl text-ink sm:text-5xl">{project.header}</h1>
+      <h1 className="mt-3 font-serif text-4xl text-paper sm:text-5xl">{project.header}</h1>
 
-      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-ink/70">
+      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-paper/70">
         {project.featured && (
           <span className="rounded-full bg-chartreuse px-3 py-1 font-semibold text-near-black-olive">
             ★ Featured
@@ -82,7 +83,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       )}
 
       <div
-        className="rich-text mt-8 max-w-2xl text-base leading-relaxed text-ink/80 sm:text-lg"
+        className="rich-text mt-8 max-w-2xl text-base leading-relaxed text-paper/80 sm:text-lg"
         dangerouslySetInnerHTML={{ __html: project.description }}
       />
 
@@ -94,7 +95,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {project.gallery.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl text-ink">Gallery</h2>
+          <h2 className="font-serif text-2xl text-paper">Gallery</h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
             {project.gallery.map((url, index) => (
               // eslint-disable-next-line @next/next/no-img-element
@@ -111,16 +112,17 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {project.links.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl text-ink">Links</h2>
+          <h2 className="font-serif text-2xl text-paper">Links</h2>
           <ul className="mt-4 flex flex-wrap gap-3">
             {project.links.map((link) => (
               <li key={link.id}>
-                <a
+                <DocumentLink
                   href={link.url}
-                  className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white px-5 py-2.5 text-sm font-medium text-ink transition-colors hover:border-navy-teal hover:text-navy-teal motion-reduce:transition-none"
+                  title={link.label}
+                  className="inline-flex items-center gap-2 rounded-full border border-paper/15 bg-paper/[0.06] px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-chartreuse hover:text-chartreuse motion-reduce:transition-none"
                 >
                   {link.label}
-                </a>
+                </DocumentLink>
               </li>
             ))}
           </ul>

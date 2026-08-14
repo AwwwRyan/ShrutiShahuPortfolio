@@ -6,14 +6,14 @@ export async function Footer() {
   const socialLinks = parseSocialLinks(siteContent?.socialLinks);
 
   return (
-    <footer className="mt-auto border-t border-ink/10 bg-white">
+    <footer className="mt-auto border-t border-paper/10 bg-navy-teal/30">
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-8 px-6 py-12 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="font-serif text-lg text-ink">Shruti Shahu</p>
+          <p className="font-serif text-lg text-paper">Shruti Shahu</p>
           {siteContent?.contactEmail && (
             <a
               href={`mailto:${siteContent.contactEmail}`}
-              className="mt-1 block text-sm text-ink/70 hover:text-ink"
+              className="mt-1 block text-sm text-paper/70 hover:text-chartreuse"
             >
               {siteContent.contactEmail}
             </a>
@@ -24,7 +24,9 @@ export async function Footer() {
                 <li key={link.url}>
                   <a
                     href={link.url}
-                    className="text-sm text-ink/70 underline underline-offset-4 hover:text-ink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-paper/70 underline underline-offset-4 hover:text-chartreuse"
                   >
                     {link.label}
                   </a>

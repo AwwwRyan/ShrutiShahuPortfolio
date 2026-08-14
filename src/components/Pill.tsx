@@ -5,8 +5,12 @@ const BASE =
   'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-sm font-semibold tracking-wide transition-colors duration-200 motion-reduce:transition-none';
 
 const TONES = {
-  dark: 'bg-near-black-olive text-paper hover:bg-navy-teal',
-  teal: 'bg-teal text-near-black-olive hover:bg-olive-sage hover:text-paper',
+  // "dark" now means "the bold, high-contrast pill" — inverted to a light fill so it
+  // pops off the dark page background instead of blending into it.
+  dark: 'bg-paper text-near-black-olive hover:bg-chartreuse',
+  // teal/olive-sage are dark tones in this palette, so the "teal" pill tone uses the
+  // other light color (chartreuse) instead — text stays dark across the hover shift.
+  teal: 'bg-chartreuse text-near-black-olive hover:bg-paper',
 } as const;
 
 type PillProps = {

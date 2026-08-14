@@ -1,14 +1,31 @@
 @import 'tailwindcss';
 
 :root {
+  /* Base/admin tokens — `/admin/*` is unstyled and inherits these directly, so they stay
+     the original light theme regardless of the public site's palette below. */
   --color-paper: #f7f5ef;
   --color-ink: #1c231b;
 
-  --color-teal: #54c9cc;
-  --color-navy-teal: #1f4f5a;
-  --color-olive-sage: #75a08e;
-  --color-chartreuse: #dcd964;
-  --color-near-black-olive: #213502;
+  /* Placeholder defaults for the accent tokens (admin never references these classes,
+     so the exact values here don't matter) — real values are set on .site-shell below. */
+  --color-teal: #235347;
+  --color-navy-teal: #0b2b26;
+  --color-olive-sage: #163b32;
+  --color-chartreuse: #8eb69b;
+  --color-near-black-olive: #051f20;
+}
+
+/* Public-site dark palette, scoped to .site-shell so it never leaks into admin.
+   Only chartreuse/paper are light enough to serve as text or bright-accent fills —
+   teal/navy-teal/olive-sage are all dark, structural/surface tones in this palette. */
+.site-shell {
+  --color-paper: #daf1de;
+  --color-teal: #235347;
+  --color-navy-teal: #0b2b26;
+  --color-olive-sage: #163b32;
+  --color-chartreuse: #8eb69b;
+  --color-near-black-olive: #051f20;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -27,17 +44,35 @@
   --font-sans: var(--font-inter);
 }
 
+/* Base body stays the original light theme — admin (`/admin/*`) is unstyled and
+   inherits this directly, so it must NOT go dark. The dark theme lives on
+   `.site-shell` (see below), which only wraps the public (site) route group. */
 body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
-/* Visible keyboard focus everywhere, without relying on any one component to opt in */
+/* Visible keyboard focus everywhere, without relying on any one component to opt in.
+   Brighter chartreuse inside .site-shell, since navy-teal doesn't contrast on its dark bg. */
 :focus-visible {
   outline: 2px solid var(--color-navy-teal);
   outline-offset: 2px;
   border-radius: 2px;
+}
+
+.site-shell :focus-visible {
+  outline-color: var(--color-chartreuse);
+}
+
+/* Organic "hand-touched" blob shapes — pure border-radius trick, no SVG/image asset needed */
+.blob-mask {
+  border-radius: 42% 58% 65% 35% / 45% 40% 60% 55%;
+}
+
+.blob-glow {
+  border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%;
+  filter: blur(48px);
 }
 
 @keyframes progress-slide {

@@ -3,9 +3,11 @@ import type { CSSProperties, ReactNode } from 'react';
 
 type CardTone = 'paper' | 'teal' | 'olive-sage' | 'chartreuse' | 'navy-teal';
 
+// teal/olive-sage/navy-teal are dark tones in this palette (light text on top);
+// chartreuse is the one bright fill (dark text on top) — the deliberate "pop" tile.
 const TONE_CLASSES: Record<CardTone, string> = {
-  paper: 'bg-white border border-ink/10 text-ink',
-  teal: 'bg-teal text-near-black-olive',
+  paper: 'bg-paper/[0.06] border border-paper/10 text-paper backdrop-blur-sm',
+  teal: 'bg-teal text-paper',
   'olive-sage': 'bg-olive-sage text-paper',
   chartreuse: 'bg-chartreuse text-near-black-olive',
   'navy-teal': 'bg-navy-teal text-paper',
@@ -18,8 +20,10 @@ type CardProps = {
   children: ReactNode;
   href?: string;
   tone?: CardTone;
-  /** Optional cover image — rendered behind the content with a dark gradient for legibility. */
+  /** Optional cover image — rendered behind the content with a green-tinted overlay for legibility. */
   imageUrl?: string | null;
+  /** Where content sits within the card. Defaults to 'end' (bottom-anchored). */
+  contentPosition?: 'start' | 'end';
   className?: string;
   style?: CSSProperties;
 };
@@ -30,10 +34,12 @@ export function Card({
   href,
   tone = 'paper',
   imageUrl,
+  contentPosition = 'end',
   className = '',
   style,
 }: CardProps) {
-  const classes = `group relative flex min-h-[10rem] flex-col justify-end overflow-hidden rounded-2xl p-6 transition-transform duration-200 motion-reduce:transition-none ${TONE_CLASSES[tone]} ${className}`;
+  const justify = contentPosition === 'start' ? 'justify-start' : 'justify-end';
+  const classes = `group relative flex min-h-[10rem] flex-col ${justify} overflow-hidden rounded-2xl p-6 transition-transform duration-200 motion-reduce:transition-none ${TONE_CLASSES[tone]} ${className}`;
 
   const content = (
     <>
@@ -45,7 +51,18 @@ export function Card({
             alt=""
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-near-black-olive/80 via-near-black-olive/10 to-transparent" />
+          {/* Full-coverage green tint (duotone-ish, matches the palette) plus a fade toward wherever
+              the content sits, so text always lands on the most-darkened part of the image.
+              Full class names kept literal (not interpolated) — Tailwind can't see dynamically
+              built class strings at build time. */}
+          <div className="absolute inset-0 bg-near-black-olive/55 mix-blend-multiply" />
+          <div
+            className={
+              contentPosition === 'start'
+                ? 'absolute inset-0 bg-gradient-to-b from-near-black-olive/80 via-near-black-olive/15 to-olive-sage/25'
+                : 'absolute inset-0 bg-gradient-to-t from-near-black-olive/80 via-near-black-olive/15 to-olive-sage/25'
+            }
+          />
         </>
       )}
       <div className={imageUrl ? 'relative text-paper' : 'relative'}>{children}</div>

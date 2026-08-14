@@ -36,26 +36,26 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12 sm:py-16">
-      <nav aria-label="Breadcrumb" className="text-sm text-ink/60">
-        <Link href="/" className="hover:text-ink hover:underline">
+      <nav aria-label="Breadcrumb" className="text-sm text-paper/60">
+        <Link href="/" className="hover:text-chartreuse hover:underline">
           Home
         </Link>
         {breadcrumbs.map((crumb) => (
           <span key={crumb.id}>
             {' '}
             /{' '}
-            <Link href={`/category/${crumb.slug}`} className="hover:text-ink hover:underline">
+            <Link href={`/category/${crumb.slug}`} className="hover:text-chartreuse hover:underline">
               {crumb.name}
             </Link>
           </span>
         ))}
       </nav>
 
-      <h1 className="mt-3 font-serif text-4xl text-ink sm:text-5xl">{category.name}</h1>
+      <h1 className="mt-3 font-serif text-4xl text-paper sm:text-5xl">{category.name}</h1>
 
       {children.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl text-ink">Subcategories</h2>
+          <h2 className="font-serif text-2xl text-paper">Subcategories</h2>
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
             {children.map((child, index) => (
               <Card
@@ -72,7 +72,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {projects.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-serif text-2xl text-ink">Projects</h2>
+          <h2 className="font-serif text-2xl text-paper">Projects</h2>
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project, index) => (
               <Card
@@ -98,7 +98,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       )}
 
       {children.length === 0 && projects.length === 0 && (
-        <p className="mt-12 text-ink/60">Nothing here yet.</p>
+        <p className="mt-12 text-paper/60">Nothing here yet.</p>
       )}
     </main>
   );

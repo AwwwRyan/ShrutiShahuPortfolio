@@ -22,12 +22,12 @@ const SKILL_GROUPS = [
 export function SkillsSection() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
-      <h2 className="font-serif text-3xl text-ink sm:text-4xl">Skills & Tools</h2>
+      <h2 className="font-serif text-3xl text-paper sm:text-4xl">Skills & Tools</h2>
 
       <div className="mt-8 grid grid-cols-1 gap-10 sm:grid-cols-2">
         {SKILL_GROUPS.map((group) => (
           <div key={group.label}>
-            <h3 className="font-sans text-sm font-semibold tracking-wide text-navy-teal uppercase">
+            <h3 className="font-sans text-sm font-semibold tracking-wide text-chartreuse uppercase">
               {group.label}
             </h3>
             <div className="mt-4 flex flex-wrap gap-3">

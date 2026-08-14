@@ -9,21 +9,42 @@ Visual design pass for the portfolio site. README.md said design/styling would b
 - Skills/tools chips render as plain text badges (no brand logos) — pulling real Grammarly/ChatGPT/etc. icons would mean bundling third-party trademarked assets; a clean text-chip in the site's own type/color system was the safer, still-editorial choice.
 - Added (not in the original brief, done proactively per later requests in the same session): skeleton loaders + a top progress bar via Next.js `loading.tsx` per route, styled 404 pages (root + site-scoped), per-page meta descriptions (static for Home/Contact, `generateMetadata` for Category/Project), full alt-text audit, and the custom favicon.
 
+**Refinement round 1 (post-launch feedback):**
+- All external links (social links, resume, project doc links) now open in a new tab (`target="_blank" rel="noopener noreferrer"`) rather than navigating away from the site.
+- **Services section changed from the bordered-card grid to a numbered editorial list** — the cards looked clickable but weren't, which read as a UI bug. New treatment: a single-column list, large serif service name + a faint serif ordinal (`01`–`06`), thin divider rules between rows, no box/background at all. Supersedes the "6 bordered cards" wording in Locked decision 3 below — the *content* (the 6 service names) is unchanged, only the visual treatment.
+- **Doc-link downloads:** investigated why some project doc links downloaded instead of opening — 14 of 18 are PDFs (Vercel Blob already serves these `Content-Disposition: inline`, so they render in-browser), but 4 are `.docx` (Blob serves these `attachment`, forcing a download regardless of link target). Decision: for those 4 specific projects only, replace the short blurb + download-link pattern with the real document content rendered directly in `description` (already a rich-text field, no code change needed once Shruti supplies the text) and remove the doc link. The other 14 PDF links are unaffected. Affected projects: "Nobody Has a Personal Style Anymore," "A Postcolonial Analysis of Urvashi Butalia's *The Other Side of Silence*," "MoneyHub EMI Calculator — Editorial Feedback Sample," "Editing Sample: Top Skills a BizOps Leader Needs to Learn."
+
+**Refinement round 2 (full dark-theme repaint):**
+- **The site is now dark-themed** — this directly supersedes Locked decision 7 below ("no full-width dark section, dark tones reserved for buttons"). The near-black tone is now the page background everywhere on the public site, not just a button color.
+- **Palette replaced entirely** with a new 6-swatch reference (see Design tokens below). The new palette is more tonal than the original — only 2 of the 6 swatches are light enough to serve as text or a "pop" accent; the other 4 are all dark greens. That reshaped several component-level color *roles*, not just hex values: `teal` and `olive-sage` flipped from "light fill, dark text" to "dark fill, light text" everywhere they're used as a Card tone, and every place that used `teal`/`olive-sage` as a text/hover/focus color (breadcrumb hovers, stat numbers, focus rings, link hovers, form focus borders, alert banners) was swept to `chartreuse` or `paper` instead, since those are the only two colors left light enough for that job.
+- **Services section changed again** — from round 1's numbered list to icon-badge cards (per a reference screenshot of a "Service We Provide" section), each genuinely linking to `/contact` this time (fixing the original "looks clickable but isn't" complaint by making it real, not just removing the affordance). Icons are from `lucide-react` (MIT-licensed), not scraped web images — a curated SVG icon library matches the site's existing clean/editorial aesthetic better than a mismatched hand-drawn set would, and avoids any licensing ambiguity around sourced icon assets.
+- **"Human touch" hero treatment**, per a third reference screenshot (organic blob-masked photo, layered/overlapping composition): the profile portrait now uses a CSS-only organic blob mask (`border-radius` trick, no SVG asset), with a soft blurred color-glow behind it and a small decorative circular badge overlapping its corner. Deeper elements from that same reference (education/experience timeline, hobbies section) weren't added — they'd need real content from Shruti and aren't part of the current data model.
+- **Dark theme is scoped to the public site only**, via a `.site-shell` wrapper class (see `src/components/SiteShell.tsx`) that both `(site)/layout.tsx` and the root `not-found.tsx` use. It works by redefining the palette's CSS custom properties *inside* `.site-shell` rather than at `:root` — `/admin/*` sits outside that scope entirely and never sees the dark values, keeping it on its original light/unstyled appearance untouched, per the standing "admin stays out of scope" rule.
+
+**Refinement round 3:**
+- **Category tiles now have real background photos** (Writing/Marketing/Digital Journalism — Editing has none yet) with a green-tinted overlay, and their label text moved to the top of the tile instead of the bottom. Hardcoded per-slug in `CategoryTiles.tsx`, not a new database field — same "no schema changes" reasoning as elsewhere in this pass.
+- **PDF doc links now open in an in-app preview modal** (`src/components/DocumentLink.tsx`) instead of a new tab, per a Google-Drive-style reference — the browser's own native PDF viewer renders inside an iframe, so the component just supplies the modal chrome around it. Non-PDF links (the 4 `.docx` files still pending real content, per round 1) fall back to the previous new-tab behavior automatically.
+
 **Goal, in Shruti's words:** make it "look like ART" — not just clean/functional, but a genuinely striking, editorial-feeling portfolio, not a generic template look.
 
 ---
 
 ## Design tokens (final)
 
-**Palette**
-- Teal — `#54C9CC`
-- Navy-teal — `#1F4F5A`
-- Olive-sage — `#75A08E`
-- Chartreuse — `#DCD964`
-- Near-black-olive — `#213502`
-- Paper (base background) — `#F7F5EF`
+**Palette — superseded by refinement round 2.** Original palette (kept for history):
+- Teal — `#54C9CC` · Navy-teal — `#1F4F5A` · Olive-sage — `#75A08E` · Chartreuse — `#DCD964` · Near-black-olive — `#213502` · Paper — `#F7F5EF`
 
-Derive all section/button colors from these — no colors outside this set without a reason. Navy-teal and near-black-olive are reserved for **button fills**, not full-width sections (see Locked decision 7).
+**Current palette** (dark theme, scoped to `.site-shell` — admin keeps the original `paper`/`ink` pairing above):
+| Token | Hex | Role |
+|---|---|---|
+| `near-black-olive` | `#051F20` | Page background (darkest) |
+| `navy-teal` | `#0B2B26` | Surface — header/footer/phone-mockup bezel |
+| `olive-sage` | `#163B32` | Secondary dark surface/border |
+| `teal` | `#235347` | Tertiary dark tone (structural only — not used as text/light-fill) |
+| `chartreuse` | `#8EB69B` | Bright accent — the workhorse: stat numbers, focus rings, hover states, badges, one "pop" Card tone |
+| `paper` | `#DAF1DE` | Lightest — body text, button fills, borders-on-dark, skeleton loaders |
+
+Only `chartreuse` and `paper` are light enough to use as text or a bright fill in this palette — everything else is a structural/background tone.
 
 **Type**
 - Display/headings: editorial serif (e.g. Fraunces)
