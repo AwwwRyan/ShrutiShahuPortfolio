@@ -114,6 +114,26 @@ body {
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+.rich-text blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+  border-left: 3px solid var(--color-chartreuse);
+  font-style: italic;
+  color: var(--color-paper);
+  opacity: 0.85;
+}
+.rich-text h2,
+.rich-text h3 {
+  font-family: var(--font-serif);
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+}
+.rich-text mark {
+  background: var(--color-chartreuse);
+  color: var(--color-near-black-olive);
+  padding: 0 0.2em;
+  border-radius: 0.2em;
+}
 
 @media (prefers-reduced-motion: reduce) {
   *,

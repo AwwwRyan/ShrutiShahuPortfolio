@@ -8,6 +8,7 @@ const CATEGORY_IMAGES: Record<string, string> = {
   writing: '/categories/writing.jpg',
   marketing: '/categories/marketing.jpg',
   'digital-journalism': '/categories/journalism.jpg',
+  editing: '/categories/editing.jpg',
 };
 
 export function CategoryTiles({ categories }: { categories: Category[] }) {

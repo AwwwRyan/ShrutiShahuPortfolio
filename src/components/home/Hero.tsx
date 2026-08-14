@@ -1,6 +1,7 @@
 import { Feather } from 'lucide-react';
 import { Pill } from '@/components/Pill';
 import { DocumentLink } from '@/components/DocumentLink';
+import { PortraitScene } from './PortraitScene';
 
 type HeroProps = {
   aboutMeHtml: string | null;
@@ -45,18 +46,15 @@ export function Hero({ aboutMeHtml, profilePhoto, resumeUrl }: HeroProps) {
         </div>
 
         {profilePhoto && (
-          <div className="relative justify-self-center sm:justify-self-end">
-            <div
-              className="blob-glow absolute -inset-6 -z-10 bg-gradient-to-br from-chartreuse/40 via-paper/15 to-teal/30"
-              aria-hidden="true"
-            />
+          <div className="relative isolate justify-self-center sm:justify-self-end">
+            <PortraitScene />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={profilePhoto}
               alt="Shruti Shahu"
-              className="blob-mask aspect-[4/5] w-full max-w-xs object-cover shadow-xl sm:max-w-sm"
+              className="relative z-10 h-auto max-h-[28rem] w-full max-w-xs object-contain drop-shadow-2xl sm:max-w-sm"
             />
-            <span className="absolute -bottom-4 -right-4 flex h-16 w-16 items-center justify-center rounded-full border border-paper/15 bg-near-black-olive shadow-lg">
+            <span className="absolute right-2 bottom-4 z-10 flex h-16 w-16 items-center justify-center rounded-full border border-paper/15 bg-near-black-olive shadow-lg">
               <Feather className="h-6 w-6 text-chartreuse" strokeWidth={1.5} aria-hidden="true" />
             </span>
           </div>
