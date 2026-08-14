@@ -22,6 +22,8 @@ type CardProps = {
   tone?: CardTone;
   /** Optional cover image — rendered behind the content with a green-tinted overlay for legibility. */
   imageUrl?: string | null;
+  /** CSS object-position for the cover image (e.g. 'center bottom', 'center 30%'). Defaults to center. */
+  imagePosition?: string;
   /** Where content sits within the card. Defaults to 'end' (bottom-anchored). */
   contentPosition?: 'start' | 'end';
   className?: string;
@@ -34,6 +36,7 @@ export function Card({
   href,
   tone = 'paper',
   imageUrl,
+  imagePosition = 'center',
   contentPosition = 'end',
   className = '',
   style,
@@ -49,6 +52,7 @@ export function Card({
           <img
             src={imageUrl}
             alt=""
+            style={{ objectPosition: imagePosition }}
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
           {/* Full-coverage green tint (duotone-ish, matches the palette) plus a fade toward wherever

@@ -11,6 +11,13 @@ const CATEGORY_IMAGES: Record<string, string> = {
   editing: '/categories/editing.jpg',
 };
 
+// Per-image crop framing, tuned per photo so the interesting part stays visible.
+const CATEGORY_IMAGE_POSITIONS: Record<string, string> = {
+  writing: 'center bottom',
+  marketing: 'center bottom',
+  'digital-journalism': 'center 30%',
+};
+
 export function CategoryTiles({ categories }: { categories: Category[] }) {
   return (
     <section id="categories" className="mx-auto max-w-6xl scroll-mt-24 px-6 py-20">
@@ -26,6 +33,7 @@ export function CategoryTiles({ categories }: { categories: Category[] }) {
               href={`/category/${category.slug}`}
               tone={CATEGORY_TILE_TONES[index % CATEGORY_TILE_TONES.length]}
               imageUrl={CATEGORY_IMAGES[category.slug]}
+              imagePosition={CATEGORY_IMAGE_POSITIONS[category.slug] ?? 'center'}
               contentPosition="start"
               className="min-h-[12rem]"
             >

@@ -2,6 +2,8 @@
  * Decorative "artsy" scene behind the Hero portrait — bold overlapping color-block shapes,
  * a dot-grid texture, sparkles, and rings, all in the site palette. Pure SVG/CSS so it stays
  * crisp and scales with the container instead of relying on a pre-baked background image.
+ * Every shape is kept fully inside the viewBox (with margin) so nothing gets clipped —
+ * the SVG's default overflow:hidden would otherwise flatten any edge a shape crosses.
  */
 export function PortraitScene() {
   return (
@@ -16,28 +18,28 @@ export function PortraitScene() {
         </pattern>
       </defs>
 
-      {/* bold overlapping color-block shapes — the main "poster" layer */}
-      <ellipse cx="120" cy="130" rx="190" ry="170" fill="var(--color-chartreuse)" opacity="0.75" />
-      <ellipse cx="300" cy="420" rx="170" ry="200" fill="var(--color-olive-sage)" opacity="0.8" />
-      <circle cx="330" cy="80" r="80" fill="var(--color-paper)" opacity="0.5" />
+      {/* bold overlapping color-block shapes — the main "poster" layer, fully contained */}
+      <ellipse cx="115" cy="150" rx="105" ry="120" fill="var(--color-chartreuse)" opacity="0.75" />
+      <ellipse cx="295" cy="385" rx="95" ry="115" fill="var(--color-olive-sage)" opacity="0.8" />
+      <circle cx="325" cy="95" r="65" fill="var(--color-paper)" opacity="0.5" />
 
       {/* dot-grid texture, confined to a corner so it reads as a deliberate accent */}
-      <rect x="20" y="330" width="150" height="150" fill="url(#portrait-dots)" />
+      <rect x="25" y="335" width="140" height="140" fill="url(#portrait-dots)" />
 
       {/* rings */}
       <circle
         cx="200"
-        cy="110"
-        r="72"
+        cy="115"
+        r="65"
         fill="none"
         stroke="var(--color-near-black-olive)"
         strokeWidth="2"
         opacity="0.6"
       />
       <circle
-        cx="60"
-        cy="460"
-        r="30"
+        cx="65"
+        cy="450"
+        r="28"
         fill="none"
         stroke="var(--color-paper)"
         strokeWidth="2"
@@ -46,15 +48,15 @@ export function PortraitScene() {
 
       {/* sparkles */}
       <path
-        d="M40 220 L48 238 L66 246 L48 254 L40 272 L32 254 L14 246 L32 238 Z"
+        d="M45 220 L53 238 L71 246 L53 254 L45 272 L37 254 L19 246 L37 238 Z"
         fill="var(--color-paper)"
       />
       <path
-        d="M360 250 L365 262 L377 267 L365 272 L360 284 L355 272 L343 267 L355 262 Z"
+        d="M350 245 L355 257 L367 262 L355 267 L350 279 L345 267 L333 262 L345 257 Z"
         fill="var(--color-near-black-olive)"
       />
       <path
-        d="M355 470 L360 482 L372 487 L360 492 L355 504 L350 492 L338 487 L350 482 Z"
+        d="M345 460 L350 472 L362 477 L350 482 L345 494 L340 482 L328 477 L340 472 Z"
         fill="var(--color-chartreuse)"
       />
     </svg>

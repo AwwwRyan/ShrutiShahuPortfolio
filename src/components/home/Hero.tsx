@@ -52,6 +52,10 @@ export function Hero({ aboutMeHtml, profilePhoto, resumeUrl }: HeroProps) {
             <img
               src={profilePhoto}
               alt="Shruti Shahu"
+              style={{
+                maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
+              }}
               className="relative z-10 h-auto max-h-[28rem] w-full max-w-xs object-contain drop-shadow-2xl sm:max-w-sm"
             />
             <span className="absolute right-2 bottom-4 z-10 flex h-16 w-16 items-center justify-center rounded-full border border-paper/15 bg-near-black-olive shadow-lg">
