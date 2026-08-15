@@ -3,13 +3,14 @@
 import { useEffect } from 'react';
 
 /**
- * Replaces the OS cursor with a small dot + trailing ring, scoped to `.site-shell` only
- * (admin keeps the native cursor). Position is written to CSS vars on <html> exactly like
- * ParallaxController — no React re-renders on pointer move. The ring's own CSS `transition`
- * (not JS) creates the trailing/lag effect and the hover-state grow, so this component only
- * ever toggles two classes; all motion is CSS-driven.
+ * Replaces the OS cursor with Shruti's cat (public/cursor/normal.png at rest, hover.png
+ * over links/buttons), scoped to `.site-shell` only (admin keeps the native cursor).
+ * Position is written to CSS vars on <html> exactly like ParallaxController — no React
+ * re-renders on pointer move. The two images are both always mounted and crossfade via CSS
+ * `opacity` transitions driven by a single `cursor-hover` class, so this component only ever
+ * toggles two classes; all motion is CSS-driven, no JS animation loop.
  * Never activates on touch devices (no real pointer to track) or under prefers-reduced-motion
- * (a follow-and-grow cursor is inherently a motion effect) — the native cursor is the correct
+ * (a following cursor is inherently a motion effect) — the native cursor is the correct
  * fallback in both cases, not a same-position static replacement.
  */
 export function CustomCursor() {
@@ -65,26 +66,11 @@ export function CustomCursor() {
   }, []);
 
   return (
-    <svg
-      className="cursor-paw"
-      viewBox="0 0 32 32"
-      width="32"
-      height="32"
-      aria-hidden="true"
-    >
-      <g className="cursor-paw-toes">
-        <ellipse cx="7" cy="13" rx="3.4" ry="4.2" transform="rotate(-25 7 13)" />
-        <ellipse cx="13" cy="7" rx="3.2" ry="4" />
-        <ellipse cx="19" cy="7" rx="3.2" ry="4" />
-        <ellipse cx="25" cy="13" rx="3.4" ry="4.2" transform="rotate(25 25 13)" />
-      </g>
-      <ellipse className="cursor-paw-pad" cx="16" cy="21.5" rx="8.5" ry="6.5" />
-      <g className="cursor-paw-claws">
-        <path d="M4.5 8 L6.5 11.5 L2.5 11 Z" transform="rotate(-25 7 13)" />
-        <path d="M11.5 2 L14.5 2 L13 6.5 Z" />
-        <path d="M17.5 2 L20.5 2 L19 6.5 Z" />
-        <path d="M27.5 8 L29.5 11 L25.5 11.5 Z" transform="rotate(25 25 13)" />
-      </g>
-    </svg>
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element -- fixed-size decorative cursor, not content */}
+      <img src="/cursor/normal.png" alt="" className="cursor-cat cursor-cat-normal" aria-hidden="true" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/cursor/hover.png" alt="" className="cursor-cat cursor-cat-hover" aria-hidden="true" />
+    </>
   );
 }
