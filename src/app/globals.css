@@ -75,6 +75,66 @@ body {
   filter: blur(48px);
 }
 
+/* Custom cursor (see CustomCursor.tsx) — a small cat-paw print that snaps to the pointer
+   (no JS animation loop; `transform` transitions handle the grow/settle). Claws are drawn
+   but hidden by default, flexing into view on interactive elements — a cat readying to
+   swipe at whatever's clickable. `.cursor-custom` is only ever added by JS after confirming
+   a fine pointer + no reduced-motion preference, so `cursor: none` never applies unless the
+   replacement is actually rendering — the native cursor is the safe default otherwise. */
+.cursor-paw {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  display: none;
+  pointer-events: none;
+  transform: translate(var(--cursor-x, -100px), var(--cursor-y, -100px)) translate(-50%, -50%) scale(1);
+  transition: transform 180ms ease-out;
+}
+
+.cursor-paw-toes,
+.cursor-paw-pad {
+  fill: var(--color-chartreuse);
+  transition: fill 180ms ease-out;
+}
+
+.cursor-paw-claws {
+  fill: var(--color-near-black-olive);
+  opacity: 0;
+  transform: translateY(2px) scale(0.85);
+  transform-origin: 16px 5px;
+  transition:
+    opacity 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+.site-shell.cursor-custom {
+  cursor: none;
+}
+
+.site-shell.cursor-custom :is(input, textarea) {
+  cursor: text;
+}
+
+.site-shell.cursor-custom .cursor-paw {
+  display: block;
+}
+
+.site-shell.cursor-custom.cursor-hover .cursor-paw {
+  transform: translate(var(--cursor-x, -100px), var(--cursor-y, -100px)) translate(-50%, -50%) scale(1.35)
+    rotate(-8deg);
+}
+
+.site-shell.cursor-custom.cursor-hover .cursor-paw-toes,
+.site-shell.cursor-custom.cursor-hover .cursor-paw-pad {
+  fill: var(--color-paper);
+}
+
+.site-shell.cursor-custom.cursor-hover .cursor-paw-claws {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 @keyframes banner-in {
   from {
     opacity: 0;

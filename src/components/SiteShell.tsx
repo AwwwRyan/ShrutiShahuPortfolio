@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { Footer } from './Footer';
 import { DecorativeLine } from './decor/DecorativeLine';
 import { ParallaxController } from './decor/ParallaxController';
+import { CustomCursor } from './decor/CustomCursor';
 
 /**
  * Dark theme is scoped to this shell (public site only) via the `site-shell` class,
@@ -17,6 +18,7 @@ export function SiteShell({ children }: { children: ReactNode }) {
     <div className="site-shell relative isolate flex min-h-full flex-1 flex-col overflow-x-clip bg-near-black-olive text-paper">
       <ParallaxController />
       <DecorativeLine />
+      <CustomCursor />
       <Header />
       <div className="flex-1">{children}</div>
       <Footer />
