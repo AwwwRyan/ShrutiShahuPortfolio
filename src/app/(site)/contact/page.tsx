@@ -6,6 +6,7 @@ import { ContactValidationError, validateContactForm } from '@/lib/contact';
 import { sendContactMessage } from '@/lib/email';
 import { Motif } from '@/components/decor/Motif';
 import { SERVICE_INQUIRY_TEMPLATES } from '@/lib/serviceInquiryTemplates';
+import { ContactSubmitButton } from '@/components/ContactSubmitButton';
 
 // No dynamic API usage of its own — force per-request rendering so contact
 // info changes (via the future Stage 9 admin UI) don't need a rebuild.
@@ -34,8 +35,14 @@ async function submitContactFormAction(formData: FormData) {
     throw error;
   }
 
+  const siteContent = await getSiteContent();
+  const to = siteContent?.contactEmail;
+  if (!to) {
+    redirect('/contact?error=send_failed');
+  }
+
   try {
-    await sendContactMessage(input.name, input.email, input.message);
+    await sendContactMessage(input.name, input.email, input.message, to);
   } catch {
     // Deliberately NOT a false "message sent" — a visitor who thinks their
     // message went through when it didn't is worse than a visible error.
@@ -148,12 +155,7 @@ export default async function ContactPage({
             className={inputClasses}
           />
         </div>
-        <button
-          type="submit"
-          className="inline-flex items-center justify-center rounded-full bg-paper px-6 py-3 font-sans text-sm font-semibold tracking-wide text-near-black-olive transition-colors duration-200 hover:bg-chartreuse motion-reduce:transition-none"
-        >
-          Send
-        </button>
+        <ContactSubmitButton />
       </form>
     </main>
   );

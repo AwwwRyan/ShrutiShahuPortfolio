@@ -37,17 +37,14 @@ function escapeHtml(value: string): string {
 }
 
 /**
- * Sends a contact-form submission to the site's admin address.
+ * Sends a contact-form submission to `to` (the site's public contact email —
+ * `SiteContent.contactEmail`, passed in by the caller — NOT `ADMIN_EMAIL`, which is
+ * a separate value used only as the admin login credential).
  * `transporter.sendMail` rejects on failure (unlike the Resend SDK, which returned
  * `{ data, error }` and required an explicit check) — a thrown error here propagates
  * to the caller, which is what stops the visitor from wrongly being told "message sent".
  */
-export async function sendContactMessage(name: string, email: string, message: string) {
-  const to = process.env.ADMIN_EMAIL;
-  if (!to) {
-    throw new Error('ADMIN_EMAIL is not configured.');
-  }
-
+export async function sendContactMessage(name: string, email: string, message: string, to: string) {
   const transporter = getTransporter();
   await transporter.sendMail({
     from: process.env.GMAIL_USER,
