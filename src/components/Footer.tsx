@@ -1,4 +1,4 @@
-import { getSiteContent, parseSocialLinks } from '@/lib/siteContent';
+import { buildMailtoHref, getSiteContent, parseSocialLinks } from '@/lib/siteContent';
 import { Pill } from './Pill';
 
 export async function Footer() {
@@ -12,7 +12,7 @@ export async function Footer() {
           <p className="font-serif text-lg text-paper">Shruti Shahu</p>
           {siteContent?.contactEmail && (
             <a
-              href={`mailto:${siteContent.contactEmail}`}
+              href={buildMailtoHref(siteContent.contactEmail)}
               className="mt-1 block text-sm text-paper/70 hover:text-chartreuse"
             >
               {siteContent.contactEmail}

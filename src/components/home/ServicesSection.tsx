@@ -12,14 +12,20 @@ const ICON_TONES = ['chartreuse', 'paper'] as const;
 const SERVICES = [
   {
     name: 'Content Editing & Proofreading',
+    slug: 'content-editing-proofreading',
     Icon: SpellCheck,
     span: 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
   },
-  { name: 'Manuscript Editing', Icon: BookOpenCheck, span: '' },
-  { name: 'Academic Editing', Icon: GraduationCap, span: 'lg:row-span-2' },
-  { name: 'Writing', Icon: PenTool, span: 'sm:col-span-2 lg:col-span-1' },
-  { name: 'Digital News Reportage', Icon: Newspaper, span: 'sm:col-span-2 lg:col-span-2' },
-  { name: 'Research', Icon: Search, span: 'sm:col-span-2 lg:col-span-2' },
+  { name: 'Manuscript Editing', slug: 'manuscript-editing', Icon: BookOpenCheck, span: '' },
+  { name: 'Academic Editing', slug: 'academic-editing', Icon: GraduationCap, span: 'lg:row-span-2' },
+  { name: 'Writing', slug: 'writing', Icon: PenTool, span: 'sm:col-span-2 lg:col-span-1' },
+  {
+    name: 'Digital News Reportage',
+    slug: 'digital-news-reportage',
+    Icon: Newspaper,
+    span: 'sm:col-span-2 lg:col-span-2',
+  },
+  { name: 'Research', slug: 'research', Icon: Search, span: 'sm:col-span-2 lg:col-span-2' },
 ] as const;
 
 const ICON_BG: Record<(typeof ICON_TONES)[number], string> = {
@@ -34,12 +40,12 @@ export function ServicesSection() {
       <h2 className="font-serif text-3xl text-paper sm:text-4xl">Services</h2>
 
       <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 lg:grid-flow-dense lg:auto-rows-[10rem]">
-        {SERVICES.map(({ name, Icon, span }, index) => {
+        {SERVICES.map(({ name, slug, Icon, span }, index) => {
           const tone = ICON_TONES[index % ICON_TONES.length];
           return (
             <Card
               key={name}
-              href="/contact"
+              href={`/contact?service=${slug}`}
               tone="paper"
               className={`min-h-[12rem] lg:min-h-0 ${span}`}
             >

@@ -1,12 +1,22 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const FROM_ADDRESS = 'onboarding@resend.dev';
+// Gmail SMTP via a Google App Password (requires 2-Step Verification on the sending
+// account) — chosen over Resend's free tier because that tier only delivers to the
+// Resend account owner's own email without a verified sending domain, which silently
+// blocked contact-form messages from ever reaching the admin's inbox. See memory.md.
+function getTransporter() {
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+  if (!user || !pass) {
+    throw new Error('GMAIL_USER and GMAIL_APP_PASSWORD must be configured to send email.');
+  }
+  return nodemailer.createTransport({ service: 'gmail', auth: { user, pass } });
+}
 
 export async function sendPasswordResetEmail(to: string, resetUrl: string) {
-  await resend.emails.send({
-    from: FROM_ADDRESS,
+  const transporter = getTransporter();
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
     to,
     subject: 'Reset your admin password',
     html: `
@@ -28,10 +38,9 @@ function escapeHtml(value: string): string {
 
 /**
  * Sends a contact-form submission to the site's admin address.
- * The Resend SDK does NOT throw on API-level failures — it returns
- * `{ data, error }` — so we must check `error` explicitly and throw
- * ourselves, or a failed send would look identical to a successful one
- * to the caller (and the visitor would wrongly be told "message sent").
+ * `transporter.sendMail` rejects on failure (unlike the Resend SDK, which returned
+ * `{ data, error }` and required an explicit check) — a thrown error here propagates
+ * to the caller, which is what stops the visitor from wrongly being told "message sent".
  */
 export async function sendContactMessage(name: string, email: string, message: string) {
   const to = process.env.ADMIN_EMAIL;
@@ -39,8 +48,9 @@ export async function sendContactMessage(name: string, email: string, message: s
     throw new Error('ADMIN_EMAIL is not configured.');
   }
 
-  const { error } = await resend.emails.send({
-    from: FROM_ADDRESS,
+  const transporter = getTransporter();
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
     to,
     replyTo: email,
     subject: `New contact form message from ${name}`,
@@ -49,8 +59,4 @@ export async function sendContactMessage(name: string, email: string, message: s
       <p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>
     `,
   });
-
-  if (error) {
-    throw new Error(`Resend failed to send the contact message: ${error.message}`);
-  }
 }

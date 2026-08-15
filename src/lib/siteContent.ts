@@ -4,6 +4,11 @@ export async function getSiteContent() {
   return prisma.siteContent.findUnique({ where: { id: 'singleton' } });
 }
 
+/** `mailto:` href with a pre-filled subject, so tapping the email opens the visitor's own mail client (whichever one they've set as default) ready to send. */
+export function buildMailtoHref(email: string, subject = 'Portfolio inquiry'): string {
+  return `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+}
+
 export type SocialLink = { label: string; url: string };
 
 export function parseSocialLinks(value: unknown): SocialLink[] {

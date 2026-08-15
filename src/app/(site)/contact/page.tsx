@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { getSiteContent, parseSocialLinks } from '@/lib/siteContent';
+import { buildMailtoHref, getSiteContent, parseSocialLinks } from '@/lib/siteContent';
 import { ContactValidationError, validateContactForm } from '@/lib/contact';
 import { sendContactMessage } from '@/lib/email';
 import { Motif } from '@/components/decor/Motif';
+import { SERVICE_INQUIRY_TEMPLATES } from '@/lib/serviceInquiryTemplates';
 
 // No dynamic API usage of its own — force per-request rendering so contact
 // info changes (via the future Stage 9 admin UI) don't need a rebuild.
@@ -52,8 +53,10 @@ export default async function ContactPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const [siteContent, { sent, error }] = await Promise.all([getSiteContent(), searchParams]);
+  const [siteContent, { sent, error, service }] = await Promise.all([getSiteContent(), searchParams]);
   const socialLinks = parseSocialLinks(siteContent?.socialLinks);
+  const prefilledMessage =
+    typeof service === 'string' ? SERVICE_INQUIRY_TEMPLATES[service] : undefined;
 
   return (
     <main className="relative mx-auto max-w-2xl px-6 py-12 sm:py-16">
@@ -70,7 +73,7 @@ export default async function ContactPage({
         {siteContent?.contactEmail && (
           <p>
             <a
-              href={`mailto:${siteContent.contactEmail}`}
+              href={buildMailtoHref(siteContent.contactEmail)}
               className="text-paper underline underline-offset-4 hover:text-chartreuse"
             >
               {siteContent.contactEmail}
@@ -136,7 +139,14 @@ export default async function ContactPage({
           <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-paper">
             Message
           </label>
-          <textarea id="message" name="message" required rows={5} className={inputClasses} />
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows={prefilledMessage ? 9 : 5}
+            defaultValue={prefilledMessage}
+            className={inputClasses}
+          />
         </div>
         <button
           type="submit"
