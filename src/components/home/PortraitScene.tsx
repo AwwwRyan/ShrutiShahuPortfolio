@@ -19,8 +19,8 @@ export function PortraitScene() {
       </defs>
 
       {/* bold overlapping color-block shapes — the main "poster" layer, fully contained */}
-      <ellipse cx="115" cy="150" rx="105" ry="120" fill="var(--color-chartreuse)" opacity="0.75" />
-      <ellipse cx="295" cy="385" rx="95" ry="115" fill="var(--color-olive-sage)" opacity="0.8" />
+      <circle cx="115" cy="150" r="110" fill="var(--color-chartreuse)" opacity="0.75" />
+      <circle cx="295" cy="385" r="100" fill="var(--color-olive-sage)" opacity="0.8" />
       <circle cx="325" cy="95" r="65" fill="var(--color-paper)" opacity="0.5" />
 
       {/* dot-grid texture, confined to a corner so it reads as a deliberate accent */}

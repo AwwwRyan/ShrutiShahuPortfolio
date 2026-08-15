@@ -56,7 +56,7 @@ export function Hero({ aboutMeHtml, profilePhoto, resumeUrl }: HeroProps) {
                 maskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, black 82%, transparent 100%)',
               }}
-              className="relative z-10 h-auto max-h-[28rem] w-full max-w-xs object-contain drop-shadow-2xl sm:max-w-sm"
+              className="relative z-10 h-auto max-h-[34rem] w-full max-w-sm object-contain drop-shadow-2xl sm:max-w-md"
             />
             <span className="absolute right-2 bottom-4 z-10 flex h-16 w-16 items-center justify-center rounded-full border border-paper/15 bg-near-black-olive shadow-lg">
               <Feather className="h-6 w-6 text-chartreuse" strokeWidth={1.5} aria-hidden="true" />

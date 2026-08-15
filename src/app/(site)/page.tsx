@@ -22,9 +22,9 @@ export default async function Home() {
         resumeUrl={siteContent?.resumeUrl ?? null}
       />
       <StatsBar />
+      <SkillsSection />
       <CategoryTiles categories={categories} />
       <ServicesSection />
-      <SkillsSection />
     </main>
   );
 }
