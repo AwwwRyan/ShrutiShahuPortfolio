@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { MailCheck } from 'lucide-react';
 import { buildMailtoHref, getSiteContent, parseSocialLinks } from '@/lib/siteContent';
 import { ContactValidationError, validateContactForm } from '@/lib/contact';
 import { sendContactMessage } from '@/lib/email';
@@ -113,9 +114,20 @@ export default async function ContactPage({
       <h2 className="mt-12 font-serif text-2xl text-paper">Send a message</h2>
 
       {sent && (
-        <p role="status" className="mt-4 rounded-lg bg-chartreuse px-4 py-3 text-near-black-olive">
-          Thanks — your message has been sent.
-        </p>
+        <div
+          role="status"
+          className="mt-4 flex items-start gap-4 rounded-2xl border border-chartreuse/30 bg-chartreuse/10 px-5 py-5 animate-[banner-in_0.45s_ease-out] sm:items-center"
+        >
+          <span className="blob-mask flex h-12 w-12 shrink-0 items-center justify-center bg-chartreuse text-near-black-olive">
+            <MailCheck className="h-6 w-6" strokeWidth={1.75} aria-hidden="true" />
+          </span>
+          <div>
+            <p className="font-serif text-lg text-paper">Got it — thank you!</p>
+            <p className="mt-1 text-sm text-paper/70">
+              Your message just landed in my inbox. I read every one myself, so expect to hear back soon.
+            </p>
+          </div>
+        </div>
       )}
       {error === 'validation' && (
         <p role="alert" className="mt-4 rounded-lg bg-paper px-4 py-3 text-near-black-olive">
