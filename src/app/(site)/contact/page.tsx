@@ -124,7 +124,7 @@ export default async function ContactPage({
           <div>
             <p className="font-serif text-lg text-paper">Got it — thank you!</p>
             <p className="mt-1 text-sm text-paper/70">
-              Your message just landed in my inbox. I read every one myself, so expect to hear back soon.
+              Your message just landed in my inbox, so expect to hear back soon.
             </p>
           </div>
         </div>
