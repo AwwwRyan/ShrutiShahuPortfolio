@@ -1,40 +1,24 @@
 import { Motif } from '@/components/decor/Motif';
 import { TestimonialsCarousel, type Testimonial } from './TestimonialsCarousel';
 
-/**
- * Placeholder copy — swap for real testimonials once Shruti sends them over.
- * Names/designations/testimony text below are all dummy data, not real clients.
- */
 const TESTIMONIALS: Testimonial[] = [
   {
-    name: 'Alex Morgan',
-    designation: 'Marketing Director, Placeholder Co.',
+    name: 'Sonia Sharma',
+    designation: 'Senior Editor',
     testimony:
-      "Working with Shruti was seamless from brief to final draft. She caught things our whole team had missed and delivered ahead of schedule.",
+      "If you're looking for a growth-driven professional who's amazing at her role and doesn't need constant pushing and pulling, you're looking for Shruti. When we were on the same team, I had the privilege to learn a lot from her working style.",
   },
   {
-    name: 'Jordan Lee',
-    designation: 'Founder, Sample Studio',
+    name: 'Manu Sharma',
+    designation: 'Scriptwriter & Senior QA Specialist',
     testimony:
-      "Her editing turned a rough draft into something we were genuinely proud to publish. Sharp eye for structure and voice.",
+      "To hiring managers, I've worked with her closely, and she's an absolute star. Super reliable, great leader, and brings so much clarity to content. Truly a gem!",
   },
   {
-    name: 'Priya Sharma',
-    designation: 'Content Lead, Example Media',
+    name: 'Christine Wanjira Muriithi',
+    designation: 'Trainee Writer',
     testimony:
-      "Shruti has a rare ability to make dense, technical writing feel effortless to read. Our readers noticed the difference immediately.",
-  },
-  {
-    name: 'Sam Whitfield',
-    designation: 'Editor-in-Chief, Demo Publication',
-    testimony:
-      "Reliable, thoughtful, and fast — exactly what you want from a manuscript editor on a tight deadline.",
-  },
-  {
-    name: 'Taylor Brooks',
-    designation: 'Academic Researcher',
-    testimony:
-      "She understood the nuance of my argument better than I'd explained it myself. The final paper was so much stronger for it.",
+      "As someone who's had the privilege of working under her guidance, mentorship, and friendship, I genuinely and highly recommend Shruti. She brings a wealth of knowledge, a zesty personality, a knack for everything 'content', and great managerial skills!",
   },
 ];
 
