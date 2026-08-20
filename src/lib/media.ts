@@ -23,14 +23,16 @@ export async function getAllImageUrls(): Promise<string[]> {
 const DOC_EXTENSIONS = ['.pdf', '.doc', '.docx'];
 
 /**
- * Every actual document file the site links to — the resume plus any project link
- * that points at a real .pdf/.doc/.docx, not an arbitrary external URL (e.g. a
- * project's `externalUrl`, or a "read the original" reference link to someone else's
- * site) — those aren't files we host, so there's nothing worth prefetching there.
+ * Every actual document file the site links to — the resume, any project link, and any
+ * project `externalUrl` that points at a real .pdf/.doc/.docx we host (e.g. a project
+ * whose card opens its own PDF directly). Excludes `externalUrl`s that AREN'T a document
+ * file (e.g. a "read the original" link out to someone else's site) — those aren't files
+ * we host, so there's nothing worth prefetching there.
  */
 export async function getAllDocUrls(): Promise<string[]> {
-  const [links, siteContent] = await Promise.all([
+  const [links, projectsWithExternalUrl, siteContent] = await Promise.all([
     prisma.projectLink.findMany({ select: { url: true } }),
+    prisma.project.findMany({ where: { externalUrl: { not: null } }, select: { externalUrl: true } }),
     prisma.siteContent.findUnique({ where: { id: 'singleton' }, select: { resumeUrl: true } }),
   ]);
 
@@ -39,6 +41,9 @@ export async function getAllDocUrls(): Promise<string[]> {
   const urls = new Set<string>();
   for (const link of links) {
     if (isDoc(link.url)) urls.add(link.url);
+  }
+  for (const project of projectsWithExternalUrl) {
+    if (project.externalUrl && isDoc(project.externalUrl)) urls.add(project.externalUrl);
   }
   if (siteContent?.resumeUrl && isDoc(siteContent.resumeUrl)) urls.add(siteContent.resumeUrl);
 
