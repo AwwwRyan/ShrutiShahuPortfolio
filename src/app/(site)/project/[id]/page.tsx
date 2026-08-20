@@ -7,6 +7,7 @@ import { getCategoryBreadcrumbs } from '@/lib/categories';
 import { getYouTubeEmbedUrl } from '@/lib/youtube';
 import { PhoneMockup } from '@/components/PhoneMockup';
 import { DocumentLink } from '@/components/DocumentLink';
+import { GalleryLightbox } from '@/components/GalleryLightbox';
 import { Motif } from '@/components/decor/Motif';
 
 // Cached per-request so generateMetadata and the page component share one DB call.
@@ -84,7 +85,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <img
           src={project.coverImage}
           alt={project.header}
-          className="mt-8 w-full rounded-2xl object-cover shadow-sm"
+          className="mt-8 max-h-96 w-full rounded-2xl object-cover shadow-sm"
         />
       )}
 
@@ -102,17 +103,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       {project.gallery.length > 0 && (
         <section className="mt-12">
           <h2 className="font-serif text-2xl text-paper">Gallery</h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-            {project.gallery.map((url, index) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={url}
-                src={url}
-                alt={`${project.header} — gallery image ${index + 1}`}
-                className="aspect-square w-full rounded-xl object-cover"
-              />
-            ))}
-          </div>
+          <GalleryLightbox images={project.gallery} title={project.header} />
         </section>
       )}
 

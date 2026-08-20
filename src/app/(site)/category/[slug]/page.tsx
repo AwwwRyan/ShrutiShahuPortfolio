@@ -87,7 +87,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 className="min-h-[14rem]"
               >
                 {project.featured && (
-                  <span className="mb-2 inline-block w-fit rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-near-black-olive">
+                  <span className="mb-3 block w-fit rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-near-black-olive">
                     ★ Featured
                   </span>
                 )}
