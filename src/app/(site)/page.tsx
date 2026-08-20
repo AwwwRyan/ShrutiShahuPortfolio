@@ -6,6 +6,7 @@ import { StatsBar } from '@/components/home/StatsBar';
 import { CategoryTiles } from '@/components/home/CategoryTiles';
 import { ServicesSection } from '@/components/home/ServicesSection';
 import { SkillsSection } from '@/components/home/SkillsSection';
+import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 import { MediaPreloader } from '@/components/MediaPreloader';
 import { DocPreloadQueue } from '@/components/DocPreloadQueue';
 
@@ -32,6 +33,7 @@ export default async function Home() {
       <SkillsSection />
       <CategoryTiles categories={categories} />
       <ServicesSection />
+      <TestimonialsSection />
     </main>
   );
 }
