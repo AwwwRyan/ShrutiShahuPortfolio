@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
+import { DocumentLink } from './DocumentLink';
 
 type CardTone = 'paper' | 'teal' | 'olive-sage' | 'chartreuse' | 'navy-teal';
 
@@ -19,8 +20,13 @@ export const CATEGORY_TILE_TONES: CardTone[] = ['teal', 'olive-sage', 'chartreus
 type CardProps = {
   children: ReactNode;
   href?: string;
-  /** Opens `href` in a new tab (target="_blank" rel="noopener noreferrer") instead of navigating via next/link. */
+  /**
+   * Opens `href` via DocumentLink instead of navigating via next/link — a .pdf opens in the
+   * same in-app modal viewer used elsewhere on the site, anything else opens in a new tab.
+   */
   external?: boolean;
+  /** Modal header / accessible label when `external` opens a PDF. Defaults to "Document". */
+  documentTitle?: string;
   tone?: CardTone;
   /** Optional cover image — rendered behind the content with a green-tinted overlay for legibility. */
   imageUrl?: string | null;
@@ -37,6 +43,7 @@ export function Card({
   children,
   href,
   external = false,
+  documentTitle,
   tone = 'paper',
   imageUrl,
   imagePosition = 'center',
@@ -76,13 +83,23 @@ export function Card({
     </>
   );
 
+  if (href && external) {
+    return (
+      <DocumentLink
+        href={href}
+        title={documentTitle ?? 'Document'}
+        className={`${classes} hover:-translate-y-1 focus-visible:-translate-y-1`}
+      >
+        {content}
+      </DocumentLink>
+    );
+  }
+
   if (href) {
     return (
       <Link
         href={href}
         style={style}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noopener noreferrer' : undefined}
         className={`${classes} hover:-translate-y-1 focus-visible:-translate-y-1`}
       >
         {content}

@@ -81,6 +81,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
                 key={project.id}
                 href={project.externalUrl || `/project/${project.id}`}
                 external={Boolean(project.externalUrl)}
+                documentTitle={project.header}
                 imageUrl={project.coverImage}
                 tone={CATEGORY_TILE_TONES[index % CATEGORY_TILE_TONES.length]}
                 className="min-h-[14rem]"

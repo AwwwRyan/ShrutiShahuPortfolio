@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getProject as getProjectUncached } from '@/lib/projects';
+import { getCategoryBreadcrumbs } from '@/lib/categories';
 import { getYouTubeEmbedUrl } from '@/lib/youtube';
 import { PhoneMockup } from '@/components/PhoneMockup';
 import { DocumentLink } from '@/components/DocumentLink';
@@ -46,6 +47,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   const embedUrl = project.videoUrl ? getYouTubeEmbedUrl(project.videoUrl) : null;
+  const breadcrumbs = await getCategoryBreadcrumbs(project.categoryId);
 
   return (
     <main className="relative mx-auto max-w-4xl px-6 py-12 sm:py-16">
@@ -53,14 +55,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <nav aria-label="Breadcrumb" className="text-sm text-paper/60">
         <Link href="/" className="hover:text-chartreuse hover:underline">
           Home
-        </Link>{' '}
-        /{' '}
-        <Link
-          href={`/category/${project.category.slug}`}
-          className="hover:text-chartreuse hover:underline"
-        >
-          {project.category.name}
         </Link>
+        {breadcrumbs.map((crumb) => (
+          <span key={crumb.id}>
+            {' '}
+            /{' '}
+            <Link href={`/category/${crumb.slug}`} className="hover:text-chartreuse hover:underline">
+              {crumb.name}
+            </Link>
+          </span>
+        ))}
       </nav>
 
       <h1 className="mt-3 font-serif text-4xl text-paper sm:text-5xl">{project.header}</h1>
