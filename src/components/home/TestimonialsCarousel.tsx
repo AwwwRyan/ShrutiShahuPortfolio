@@ -14,10 +14,11 @@ const SCROLL_SPEED_PX_PER_FRAME = 0.4;
 /**
  * Continuous slow auto-scroll driven by nudging real `scrollLeft` on a raf loop — not a CSS
  * transform — so native manual scrolling (touch drag, trackpad, scrollbar) just works
- * alongside it with no conflict. Content is rendered twice back-to-back; once scrollLeft
- * passes the halfway point (end of the first copy) it's decremented by exactly that half-width,
- * which is invisible since the second copy is pixel-identical to the first — a standard
- * seamless-loop marquee technique.
+ * alongside it with no conflict. Content is rendered twice back-to-back; a `scroll` listener
+ * (covering BOTH the auto-scroll and any manual drag/swipe/wheel scroll, not just the raf
+ * loop) jumps scrollLeft back by exactly half of scrollWidth the moment it passes the
+ * halfway point — invisible since the second copy is pixel-identical to the first, giving a
+ * seamless infinite loop no matter what's driving the scroll.
  * Pauses on hover (mouse) and while touched (tap), resuming on mouseleave/touchend — matching
  * the plain-language ask ("stops on hover/on tap"). Skips the auto-scroll entirely under
  * prefers-reduced-motion, but the strip stays manually scrollable either way.
@@ -31,45 +32,53 @@ export function TestimonialsCarousel({ testimonials }: { testimonials: Testimoni
   const positionRef = useRef(0);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
     const el = containerRef.current;
     if (!el) return;
 
-    positionRef.current = el.scrollLeft;
-    let raf: number;
-    const step = () => {
-      if (!pausedRef.current) {
-        const halfWidth = el.scrollWidth / 2;
-        positionRef.current += SCROLL_SPEED_PX_PER_FRAME;
-        if (positionRef.current >= halfWidth) {
-          positionRef.current -= halfWidth;
-        }
-        el.scrollLeft = positionRef.current;
+    const onScroll = () => {
+      const halfWidth = el.scrollWidth / 2;
+      if (el.scrollLeft >= halfWidth) {
+        el.scrollLeft -= halfWidth;
       }
-      raf = requestAnimationFrame(step);
+      // Re-sync so the raf loop below (if running) continues from the corrected value
+      // instead of overwriting it with its own stale, pre-correction position next frame.
+      positionRef.current = el.scrollLeft;
     };
-    raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    el.addEventListener('scroll', onScroll, { passive: true });
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let raf: number | undefined;
+    if (!prefersReducedMotion) {
+      positionRef.current = el.scrollLeft;
+      const step = () => {
+        if (!pausedRef.current) {
+          positionRef.current += SCROLL_SPEED_PX_PER_FRAME;
+          el.scrollLeft = positionRef.current;
+        }
+        raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }
+
+    return () => {
+      el.removeEventListener('scroll', onScroll);
+      if (raf !== undefined) cancelAnimationFrame(raf);
+    };
   }, []);
 
   const pause = () => {
     pausedRef.current = true;
   };
-  // Resyncs from the real scrollLeft so a manual scroll while paused (hover + wheel, or a
-  // touch drag) doesn't cause a visible jump back to the stale pre-interaction position.
+  // No need to resync positionRef here — the scroll listener above already keeps it in
+  // sync in real time with any manual scroll that happened while paused.
   const resume = () => {
-    if (containerRef.current) {
-      positionRef.current = containerRef.current.scrollLeft;
-    }
     pausedRef.current = false;
   };
 
   return (
     <div
       ref={containerRef}
-      className="flex gap-6 overflow-x-auto pb-4 [scrollbar-width:thin] [-webkit-overflow-scrolling:touch]"
+      className="no-scrollbar flex gap-6 overflow-x-auto pb-4 [-webkit-overflow-scrolling:touch]"
       onMouseEnter={pause}
       onMouseLeave={resume}
       onTouchStart={pause}

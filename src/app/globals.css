@@ -130,6 +130,16 @@ body {
   transform: translateY(0) scale(1);
 }
 
+/* Scrollable but no visible scrollbar track — used for the testimonials carousel, which
+   loops infinitely and has no real "end" for a scrollbar to usefully represent anyway. */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
+
 @keyframes banner-in {
   from {
     opacity: 0;
