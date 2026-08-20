@@ -15,7 +15,7 @@ export function Hero({ aboutMeHtml, profilePhoto, resumeUrl }: HeroProps) {
       <div className="grid items-center gap-10 sm:grid-cols-[1.2fr_0.8fr] sm:gap-16">
         <div>
           <h1 className="font-serif text-4xl leading-tight tracking-tight text-paper sm:text-5xl">
-            Hi, I&apos;m Shruti
+            Hi, I&apos;m Shruti!
           </h1>
 
           {aboutMeHtml ? (
