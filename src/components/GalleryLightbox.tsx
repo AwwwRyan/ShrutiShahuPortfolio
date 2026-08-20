@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type TouchEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type TouchEvent } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 type GalleryLightboxProps = {
@@ -14,9 +14,15 @@ export function GalleryLightbox({ images, title }: GalleryLightboxProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const touchStartX = useRef<number | null>(null);
 
-  const close = () => setOpenIndex(null);
-  const showPrev = () => setOpenIndex((i) => (i === null ? null : (i - 1 + images.length) % images.length));
-  const showNext = () => setOpenIndex((i) => (i === null ? null : (i + 1) % images.length));
+  const close = useCallback(() => setOpenIndex(null), []);
+  const showPrev = useCallback(
+    () => setOpenIndex((i) => (i === null ? null : (i - 1 + images.length) % images.length)),
+    [images.length],
+  );
+  const showNext = useCallback(
+    () => setOpenIndex((i) => (i === null ? null : (i + 1) % images.length)),
+    [images.length],
+  );
 
   const SWIPE_THRESHOLD_PX = 50;
   const onTouchStart = (event: TouchEvent) => {
@@ -48,7 +54,7 @@ export function GalleryLightbox({ images, title }: GalleryLightboxProps) {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [openIndex]);
+  }, [openIndex, close, showPrev, showNext]);
 
   return (
     <>
