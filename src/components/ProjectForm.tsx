@@ -21,6 +21,7 @@ export function ProjectForm({
     description?: string;
     client?: string;
     videoUrl?: string;
+    externalUrl?: string;
     tags?: string[];
     featured?: boolean;
     links?: ExistingLink[];
@@ -70,6 +71,13 @@ export function ProjectForm({
       <label>
         Video URL (optional, e.g. YouTube)
         <input type="url" name="videoUrl" defaultValue={defaults?.videoUrl} />
+      </label>
+
+      <label>
+        External URL (optional) — if set, this project&apos;s card links straight here in a new
+        tab instead of its own page. For pieces that are really just a pointer to a client&apos;s
+        own published article.
+        <input type="url" name="externalUrl" defaultValue={defaults?.externalUrl} />
       </label>
 
       <label>

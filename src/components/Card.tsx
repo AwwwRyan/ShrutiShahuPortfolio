@@ -19,6 +19,8 @@ export const CATEGORY_TILE_TONES: CardTone[] = ['teal', 'olive-sage', 'chartreus
 type CardProps = {
   children: ReactNode;
   href?: string;
+  /** Opens `href` in a new tab (target="_blank" rel="noopener noreferrer") instead of navigating via next/link. */
+  external?: boolean;
   tone?: CardTone;
   /** Optional cover image — rendered behind the content with a green-tinted overlay for legibility. */
   imageUrl?: string | null;
@@ -34,6 +36,7 @@ type CardProps = {
 export function Card({
   children,
   href,
+  external = false,
   tone = 'paper',
   imageUrl,
   imagePosition = 'center',
@@ -78,6 +81,8 @@ export function Card({
       <Link
         href={href}
         style={style}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
         className={`${classes} hover:-translate-y-1 focus-visible:-translate-y-1`}
       >
         {content}

@@ -49,6 +49,7 @@ next-env.d.ts
 /Shruti Shahu - CV - Content.pdf
 /Video Script bank .xlsx
 /assets/
+/updates/
 
 # local Claude Code tooling config (machine-specific, not project source)
 /.claude/

@@ -1,21 +1,28 @@
 import { listTopLevelCategories } from '@/lib/categories';
 import { getSiteContent } from '@/lib/siteContent';
+import { getAllImageUrls, getAllDocUrls } from '@/lib/media';
 import { Hero } from '@/components/home/Hero';
 import { StatsBar } from '@/components/home/StatsBar';
 import { CategoryTiles } from '@/components/home/CategoryTiles';
 import { ServicesSection } from '@/components/home/ServicesSection';
 import { SkillsSection } from '@/components/home/SkillsSection';
+import { MediaPreloader } from '@/components/MediaPreloader';
+import { DocPreloadQueue } from '@/components/DocPreloadQueue';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const [siteContent, categories] = await Promise.all([
+  const [siteContent, categories, imageUrls, docUrls] = await Promise.all([
     getSiteContent(),
     listTopLevelCategories(),
+    getAllImageUrls(),
+    getAllDocUrls(),
   ]);
 
   return (
     <main>
+      <MediaPreloader urls={imageUrls} />
+      <DocPreloadQueue urls={docUrls} />
       <Hero
         aboutMeHtml={siteContent?.aboutMe ?? null}
         profilePhoto={siteContent?.profilePhoto ?? null}

@@ -19,6 +19,7 @@ export type ProjectInput = {
   coverImage?: string | null;
   gallery?: string[];
   videoUrl?: string | null;
+  externalUrl?: string | null;
   client?: string | null;
   tags?: string[];
   featured?: boolean;
@@ -48,6 +49,7 @@ export async function createProject(input: ProjectInput): Promise<string> {
       coverImage: input.coverImage ?? null,
       gallery: input.gallery ?? [],
       videoUrl: input.videoUrl ?? null,
+      externalUrl: input.externalUrl ?? null,
       client: input.client ?? null,
       tags: input.tags ?? [],
       featured: input.featured ?? false,
@@ -77,6 +79,7 @@ export async function updateProject(id: string, input: ProjectInput): Promise<vo
         coverImage: input.coverImage ?? null,
         gallery: input.gallery ?? [],
         videoUrl: input.videoUrl ?? null,
+        externalUrl: input.externalUrl ?? null,
         client: input.client ?? null,
         tags: input.tags ?? [],
         featured: input.featured ?? false,

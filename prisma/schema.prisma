@@ -30,6 +30,10 @@ model Project {
   coverImage  String?
   gallery     String[]      @default([])
   videoUrl    String?
+  /// When set, the project's card links straight here (opened in a new tab) instead of
+  /// its own /project/[id] page — for pieces that are really just a pointer to a
+  /// client's own published article rather than a piece meant to have its own detail page.
+  externalUrl String?
   client      String?
   tags        String[]      @default([])
   featured    Boolean       @default(false)

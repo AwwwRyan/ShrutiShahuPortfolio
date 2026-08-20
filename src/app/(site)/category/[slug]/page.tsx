@@ -79,7 +79,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             {projects.map((project, index) => (
               <Card
                 key={project.id}
-                href={`/project/${project.id}`}
+                href={project.externalUrl || `/project/${project.id}`}
+                external={Boolean(project.externalUrl)}
                 imageUrl={project.coverImage}
                 tone={CATEGORY_TILE_TONES[index % CATEGORY_TILE_TONES.length]}
                 className="min-h-[14rem]"
