@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { ProjectForm } from '@/components/ProjectForm';
 import { listAllCategoriesFlat } from '@/lib/categories';
 import { createProject } from '@/lib/projects';
@@ -27,17 +28,21 @@ export default async function NewProjectPage({
   const categories = await listAllCategoriesFlat();
 
   return (
-    <main>
-      <h1>New Project</h1>
-      <p>
-        <a href="/admin/categories">Back to categories</a>
+    <main className="mx-auto max-w-2xl px-6 py-12 sm:px-8">
+      <p className="text-sm text-paper/60">
+        <Link href="/admin/categories" className="hover:text-chartreuse hover:underline">
+          ← Back to categories
+        </Link>
       </p>
-      <ProjectForm
-        action={createProjectAction}
-        categories={categories}
-        defaultCategoryId={typeof categoryId === 'string' ? categoryId : undefined}
-        submitLabel="Create project"
-      />
+      <h1 className="mt-3 font-serif text-3xl text-paper">New Project</h1>
+      <div className="mt-8">
+        <ProjectForm
+          action={createProjectAction}
+          categories={categories}
+          defaultCategoryId={typeof categoryId === 'string' ? categoryId : undefined}
+          submitLabel="Create project"
+        />
+      </div>
     </main>
   );
 }

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import {
   CircularMoveError,
@@ -6,6 +7,7 @@ import {
   getCategoryWithCounts,
   listAllCategoriesFlat,
 } from '@/lib/categories';
+import { adminInputClasses, adminButtonSecondary, adminButtonDanger, adminAlertClasses } from '@/lib/adminStyles';
 
 async function deleteCategoryAction(formData: FormData) {
   'use server';
@@ -56,34 +58,45 @@ export default async function DeleteCategoryPage({
   );
 
   return (
-    <main>
-      <h1>Delete &ldquo;{category.name}&rdquo;</h1>
+    <main className="mx-auto max-w-2xl px-6 py-12 sm:px-8">
+      <h1 className="font-serif text-3xl text-paper">
+        Delete &ldquo;{category.name}&rdquo;
+      </h1>
+
       {error === 'MoveTargetRequiredError' && (
-        <p role="alert">This category has projects directly in it — pick a target to move them into.</p>
+        <p role="alert" className={`mt-4 ${adminAlertClasses}`}>
+          This category has projects directly in it — pick a target to move them into.
+        </p>
       )}
       {error === 'CircularMoveError' && (
-        <p role="alert">Can&apos;t move into itself or one of the children being relocated.</p>
+        <p role="alert" className={`mt-4 ${adminAlertClasses}`}>
+          Can&apos;t move into itself or one of the children being relocated.
+        </p>
       )}
 
-      {hasContents ? (
-        <>
-          <p>
-            This category has {childCount} subcategor{childCount === 1 ? 'y' : 'ies'} and{' '}
-            {projectCount} project{projectCount === 1 ? '' : 's'} directly in it.
-          </p>
+      <div className="mt-6 rounded-2xl border border-rust/30 bg-rust/5 p-6">
+        {hasContents ? (
+          <>
+            <p className="text-paper/80">
+              This category has {childCount} subcategor{childCount === 1 ? 'y' : 'ies'} and{' '}
+              {projectCount} project{projectCount === 1 ? '' : 's'} directly in it.
+            </p>
 
-          <form action={deleteCategoryAction}>
-            <input type="hidden" name="id" value={id} />
-            <input type="hidden" name="mode" value="cascade" />
-            <button type="submit">Delete everything (category, subcategories, and projects)</button>
-          </form>
+            <form action={deleteCategoryAction} className="mt-5">
+              <input type="hidden" name="id" value={id} />
+              <input type="hidden" name="mode" value="cascade" />
+              <button type="submit" className={adminButtonDanger}>
+                Delete everything (category, subcategories, and projects)
+              </button>
+            </form>
 
-          <form action={deleteCategoryAction}>
-            <input type="hidden" name="id" value={id} />
-            <input type="hidden" name="mode" value="move" />
-            <label>
-              Move subcategories/projects to
-              <select name="targetParentId" defaultValue="" required>
+            <form action={deleteCategoryAction} className="mt-4 space-y-2">
+              <input type="hidden" name="id" value={id} />
+              <input type="hidden" name="mode" value="move" />
+              <label className="block text-sm font-medium text-paper">
+                Move subcategories/projects to
+              </label>
+              <select name="targetParentId" defaultValue="" required className={adminInputClasses}>
                 <option value="" disabled>
                   Choose a category…
                 </option>
@@ -93,21 +106,27 @@ export default async function DeleteCategoryPage({
                   </option>
                 ))}
               </select>
-            </label>
-            <button type="submit">Move contents here, then delete this category</button>
+              <button type="submit" className={adminButtonSecondary}>
+                Move contents here, then delete this category
+              </button>
+            </form>
+          </>
+        ) : (
+          <form action={deleteCategoryAction}>
+            <input type="hidden" name="id" value={id} />
+            <input type="hidden" name="mode" value="cascade" />
+            <p className="text-paper/80">This category is empty.</p>
+            <button type="submit" className={`mt-4 ${adminButtonDanger}`}>
+              Delete
+            </button>
           </form>
-        </>
-      ) : (
-        <form action={deleteCategoryAction}>
-          <input type="hidden" name="id" value={id} />
-          <input type="hidden" name="mode" value="cascade" />
-          <p>This category is empty.</p>
-          <button type="submit">Delete</button>
-        </form>
-      )}
+        )}
+      </div>
 
-      <p>
-        <a href="/admin/categories">Cancel</a>
+      <p className="mt-6">
+        <Link href="/admin/categories" className="text-sm text-paper/70 underline underline-offset-4 hover:text-chartreuse">
+          Cancel
+        </Link>
       </p>
     </main>
   );

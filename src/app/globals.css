@@ -1,30 +1,38 @@
 @import 'tailwindcss';
 
 :root {
-  /* Base/admin tokens — `/admin/*` is unstyled and inherits these directly, so they stay
-     the original light theme regardless of the public site's palette below. */
+  /* Base tokens — anything NOT wrapped in .site-shell or .admin-shell inherits these
+     directly (there's nothing left that does, in practice, but they're the fallback). */
   --color-paper: #f7f5ef;
   --color-ink: #1c231b;
 
-  /* Placeholder defaults for the accent tokens (admin never references these classes,
-     so the exact values here don't matter) — real values are set on .site-shell below. */
+  /* Placeholder defaults for the accent tokens (nothing outside .site-shell/.admin-shell
+     references these classes, so the exact values here don't matter) — real values are
+     set on .site-shell/.admin-shell below. */
   --color-teal: #235347;
   --color-navy-teal: #0b2b26;
   --color-olive-sage: #163b32;
   --color-chartreuse: #8eb69b;
   --color-near-black-olive: #051f20;
+  --color-rust: #c46d64;
 }
 
-/* Public-site dark palette, scoped to .site-shell so it never leaks into admin.
+/* Public-site dark palette, scoped to .site-shell so it never leaks outside it.
    Only chartreuse/paper are light enough to serve as text or bright-accent fills —
-   teal/navy-teal/olive-sage are all dark, structural/surface tones in this palette. */
-.site-shell {
+   teal/navy-teal/olive-sage are all dark, structural/surface tones in this palette.
+   --color-rust is a deliberately narrow exception: a muted danger/warning accent used
+   ONLY for destructive actions (delete buttons, danger banners) — not part of the
+   general palette otherwise. Solid rust fills need text-near-black-olive, not text-paper
+   (paper-on-rust is only ~3.1:1 contrast, near-black-olive-on-rust is ~4.7:1). */
+.site-shell,
+.admin-shell {
   --color-paper: #daf1de;
   --color-teal: #235347;
   --color-navy-teal: #0b2b26;
   --color-olive-sage: #163b32;
   --color-chartreuse: #8eb69b;
   --color-near-black-olive: #051f20;
+  --color-rust: #c46d64;
   color-scheme: dark;
 }
 
@@ -39,14 +47,15 @@
   --color-near-black-olive: var(--color-near-black-olive);
   --color-paper: var(--color-paper);
   --color-ink: var(--color-ink);
+  --color-rust: var(--color-rust);
 
   --font-serif: var(--font-fraunces);
   --font-sans: var(--font-inter);
 }
 
-/* Base body stays the original light theme — admin (`/admin/*`) is unstyled and
-   inherits this directly, so it must NOT go dark. The dark theme lives on
-   `.site-shell` (see below), which only wraps the public (site) route group. */
+/* Base body — the fallback light theme for anything not wrapped in .site-shell or
+   .admin-shell. In practice nothing renders directly against this anymore (both route
+   groups wrap in one of those two), but it's the safe default if that ever changes. */
 body {
   background: var(--color-paper);
   color: var(--color-ink);
@@ -54,14 +63,16 @@ body {
 }
 
 /* Visible keyboard focus everywhere, without relying on any one component to opt in.
-   Brighter chartreuse inside .site-shell, since navy-teal doesn't contrast on its dark bg. */
+   Brighter chartreuse inside .site-shell/.admin-shell, since navy-teal doesn't contrast
+   on their dark background. */
 :focus-visible {
   outline: 2px solid var(--color-navy-teal);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-.site-shell :focus-visible {
+.site-shell :focus-visible,
+.admin-shell :focus-visible {
   outline-color: var(--color-chartreuse);
 }
 

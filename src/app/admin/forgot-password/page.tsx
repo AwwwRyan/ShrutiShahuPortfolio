@@ -1,6 +1,8 @@
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { createPasswordResetToken } from '@/lib/passwordReset';
 import { sendPasswordResetEmail } from '@/lib/email';
+import { adminInputClasses, adminLabelClasses, adminButtonPrimary, adminStatusClasses } from '@/lib/adminStyles';
 
 async function forgotPasswordAction(formData: FormData) {
   'use server';
@@ -27,24 +29,41 @@ export default async function ForgotPasswordPage({
   const { sent } = await searchParams;
 
   return (
-    <main>
-      <h1>Forgot Password</h1>
-      {sent ? (
-        <p role="status">
-          If that email is registered, a password reset link has been sent. Check your inbox.
+    <main className="mx-auto flex min-h-[70vh] max-w-md items-center px-6 py-12">
+      <div className="w-full rounded-2xl border border-paper/10 bg-paper/[0.06] p-8">
+        <h1 className="font-serif text-2xl text-paper">Forgot Password</h1>
+
+        {sent ? (
+          <p role="status" className={`mt-6 ${adminStatusClasses}`}>
+            If that email is registered, a password reset link has been sent. Check your inbox.
+          </p>
+        ) : (
+          <form action={forgotPasswordAction} className="mt-6 space-y-5">
+            <div>
+              <label htmlFor="email" className={adminLabelClasses}>
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                autoComplete="username"
+                className={adminInputClasses}
+              />
+            </div>
+            <button type="submit" className={`w-full ${adminButtonPrimary}`}>
+              Send reset link
+            </button>
+          </form>
+        )}
+
+        <p className="mt-6 text-center text-sm">
+          <Link href="/admin/login" className="text-paper/70 underline underline-offset-4 hover:text-chartreuse">
+            Back to login
+          </Link>
         </p>
-      ) : (
-        <form action={forgotPasswordAction}>
-          <label>
-            Email
-            <input type="email" name="email" required autoComplete="username" />
-          </label>
-          <button type="submit">Send reset link</button>
-        </form>
-      )}
-      <p>
-        <a href="/admin/login">Back to login</a>
-      </p>
+      </div>
     </main>
   );
 }

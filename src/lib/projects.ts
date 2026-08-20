@@ -38,7 +38,14 @@ function validate(input: ProjectInput) {
 export async function createProject(input: ProjectInput): Promise<string> {
   validate(input);
 
-  const siblingCount = await prisma.project.count({ where: { categoryId: input.categoryId } });
+  // Count-of-siblings would collide with a surviving sibling's order once any
+  // sibling in this category has ever been deleted — max+1 stays unique
+  // regardless of deletion history. See moveProjectSibling for why that matters.
+  const maxOrder = await prisma.project.aggregate({
+    where: { categoryId: input.categoryId },
+    _max: { order: true },
+  });
+  const nextOrder = (maxOrder._max.order ?? -1) + 1;
   const links = input.links?.filter((l) => l.label.trim() && l.url.trim()) ?? [];
 
   const project = await prisma.project.create({
@@ -53,7 +60,7 @@ export async function createProject(input: ProjectInput): Promise<string> {
       client: input.client ?? null,
       tags: input.tags ?? [],
       featured: input.featured ?? false,
-      order: siblingCount,
+      order: nextOrder,
       links: {
         create: links.map((l, i) => ({ label: l.label.trim(), url: l.url.trim(), order: i })),
       },
@@ -115,12 +122,17 @@ export async function toggleFeatured(id: string): Promise<void> {
   await prisma.project.update({ where: { id }, data: { featured: !project.featured } });
 }
 
-/** Swaps a project's order with its previous/next sibling within the same category. */
+/**
+ * Swaps a project with its previous/next sibling within the same category by
+ * renumbering the whole sibling group to 0..N-1 — see moveSibling in
+ * categories.ts for why a plain two-value swap silently no-ops once sibling
+ * `order`s have any duplicates (which count-based assignment can produce).
+ */
 export async function moveProjectSibling(id: string, direction: 'up' | 'down'): Promise<void> {
   const project = await prisma.project.findUniqueOrThrow({ where: { id } });
   const siblings = await prisma.project.findMany({
     where: { categoryId: project.categoryId },
-    orderBy: { order: 'asc' },
+    orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
   });
 
   const index = siblings.findIndex((s) => s.id === id);
@@ -129,9 +141,10 @@ export async function moveProjectSibling(id: string, direction: 'up' | 'down'): 
     return;
   }
 
-  const other = siblings[swapIndex];
-  await prisma.$transaction([
-    prisma.project.update({ where: { id: project.id }, data: { order: other.order } }),
-    prisma.project.update({ where: { id: other.id }, data: { order: project.order } }),
-  ]);
+  const reordered = siblings.slice();
+  [reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
+
+  await prisma.$transaction(
+    reordered.map((s, i) => prisma.project.update({ where: { id: s.id }, data: { order: i } })),
+  );
 }

@@ -78,10 +78,14 @@ export async function listCategoryTree(): Promise<CategoryTreeNode[]> {
 
 export async function createCategory(name: string, parentId: string | null): Promise<string> {
   const slug = await getUniqueSlug(name);
-  const siblingCount = await prisma.category.count({ where: { parentId } });
+  // Count-of-siblings would collide with a surviving sibling's order once any
+  // sibling has ever been deleted (count drops but existing orders don't
+  // shift) — max+1 stays unique regardless of deletion history.
+  const maxOrder = await prisma.category.aggregate({ where: { parentId }, _max: { order: true } });
+  const nextOrder = (maxOrder._max.order ?? -1) + 1;
 
   const category = await prisma.category.create({
-    data: { name, slug, parentId, order: siblingCount },
+    data: { name, slug, parentId, order: nextOrder },
   });
 
   return category.id;
@@ -129,10 +133,12 @@ export async function moveCategory(id: string, newParentId: string | null): Prom
     throw new CircularMoveError();
   }
 
-  const siblingCount = await prisma.category.count({ where: { parentId: newParentId } });
+  // See createCategory: max+1 avoids colliding with a surviving sibling's
+  // order after deletions, which count-of-siblings does not.
+  const maxOrder = await prisma.category.aggregate({ where: { parentId: newParentId }, _max: { order: true } });
   await prisma.category.update({
     where: { id },
-    data: { parentId: newParentId, order: siblingCount },
+    data: { parentId: newParentId, order: (maxOrder._max.order ?? -1) + 1 },
   });
 }
 
@@ -144,12 +150,19 @@ export async function reorderCategories(parentId: string | null, orderedIds: str
   );
 }
 
-/** Swaps a category's order with its previous/next sibling under the same parent. */
+/**
+ * Renumbers every sibling to a clean 0..N-1 sequence rather than swapping the
+ * two `order` values directly — sibling `order`s can end up with duplicates
+ * or gaps over time (see createCategory's count-based assignment), and a
+ * plain value-swap silently no-ops when the mover and its array-index
+ * "neighbor" already share a duplicate order value. Renumbering after every
+ * move is self-healing against that drift.
+ */
 export async function moveSibling(id: string, direction: 'up' | 'down'): Promise<void> {
   const category = await prisma.category.findUniqueOrThrow({ where: { id } });
   const siblings = await prisma.category.findMany({
     where: { parentId: category.parentId },
-    orderBy: { order: 'asc' },
+    orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
   });
 
   const index = siblings.findIndex((s) => s.id === id);
@@ -158,11 +171,12 @@ export async function moveSibling(id: string, direction: 'up' | 'down'): Promise
     return; // already at the edge, nothing to do
   }
 
-  const other = siblings[swapIndex];
-  await prisma.$transaction([
-    prisma.category.update({ where: { id: category.id }, data: { order: other.order } }),
-    prisma.category.update({ where: { id: other.id }, data: { order: category.order } }),
-  ]);
+  const reordered = siblings.slice();
+  [reordered[index], reordered[swapIndex]] = [reordered[swapIndex], reordered[index]];
+
+  await prisma.$transaction(
+    reordered.map((s, i) => prisma.category.update({ where: { id: s.id }, data: { order: i } })),
+  );
 }
 
 export type CategoryDeleteOptions =

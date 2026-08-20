@@ -1,5 +1,14 @@
 import { LINK_SLOTS } from '@/lib/projects';
 import { RichTextEditor } from './RichTextEditor';
+import {
+  adminInputClasses,
+  adminLabelClasses,
+  adminCardClasses,
+  adminLegendClasses,
+  adminButtonPrimary,
+  adminFileInputClasses,
+  adminCheckboxClasses,
+} from '@/lib/adminStyles';
 
 type CategoryOption = { id: string; name: string };
 
@@ -33,15 +42,32 @@ export function ProjectForm({
   const linkSlots = Array.from({ length: LINK_SLOTS }, (_, i) => defaults?.links?.[i]);
 
   return (
-    <form action={action}>
-      <label>
-        Header
-        <input type="text" name="header" defaultValue={defaults?.header} required />
-      </label>
+    <form action={action} className="space-y-6">
+      <div>
+        <label htmlFor="header" className={adminLabelClasses}>
+          Header
+        </label>
+        <input
+          type="text"
+          id="header"
+          name="header"
+          defaultValue={defaults?.header}
+          required
+          className={adminInputClasses}
+        />
+      </div>
 
-      <label>
-        Category
-        <select name="categoryId" defaultValue={defaultCategoryId} required>
+      <div>
+        <label htmlFor="categoryId" className={adminLabelClasses}>
+          Category
+        </label>
+        <select
+          id="categoryId"
+          name="categoryId"
+          defaultValue={defaultCategoryId}
+          required
+          className={adminInputClasses}
+        >
           <option value="" disabled>
             Choose a category…
           </option>
@@ -51,84 +77,136 @@ export function ProjectForm({
             </option>
           ))}
         </select>
-      </label>
+      </div>
 
       <div>
-        <span>Description</span>
+        <span className={adminLabelClasses}>Description</span>
         <RichTextEditor name="description" defaultValue={defaults?.description} />
       </div>
 
-      <label>
-        Client / publication (optional)
-        <input type="text" name="client" defaultValue={defaults?.client} />
-      </label>
+      <div>
+        <label htmlFor="client" className={adminLabelClasses}>
+          Client / publication (optional)
+        </label>
+        <input type="text" id="client" name="client" defaultValue={defaults?.client} className={adminInputClasses} />
+      </div>
 
-      <label>
-        Tags (comma-separated)
-        <input type="text" name="tags" defaultValue={defaults?.tags?.join(', ')} />
-      </label>
+      <div>
+        <label htmlFor="tags" className={adminLabelClasses}>
+          Tags (comma-separated)
+        </label>
+        <input
+          type="text"
+          id="tags"
+          name="tags"
+          defaultValue={defaults?.tags?.join(', ')}
+          className={adminInputClasses}
+        />
+      </div>
 
-      <label>
-        Video URL (optional, e.g. YouTube)
-        <input type="url" name="videoUrl" defaultValue={defaults?.videoUrl} />
-      </label>
+      <div>
+        <label htmlFor="videoUrl" className={adminLabelClasses}>
+          Video URL (optional, e.g. YouTube)
+        </label>
+        <input type="url" id="videoUrl" name="videoUrl" defaultValue={defaults?.videoUrl} className={adminInputClasses} />
+      </div>
 
-      <label>
-        External URL (optional) — if set, this project&apos;s card links straight here in a new
-        tab instead of its own page. For pieces that are really just a pointer to a client&apos;s
-        own published article.
-        <input type="url" name="externalUrl" defaultValue={defaults?.externalUrl} />
-      </label>
+      <div>
+        <label htmlFor="externalUrl" className={adminLabelClasses}>
+          External URL (optional)
+        </label>
+        <p className="mb-1.5 text-xs text-paper/50">
+          If set, this project&apos;s card links straight here in a new tab instead of its own page — for
+          pieces that are really just a pointer to a client&apos;s own published article.
+        </p>
+        <input
+          type="url"
+          id="externalUrl"
+          name="externalUrl"
+          defaultValue={defaults?.externalUrl}
+          className={adminInputClasses}
+        />
+      </div>
 
-      <label>
-        <input type="checkbox" name="featured" defaultChecked={defaults?.featured} />
+      <label className="flex items-center gap-2 text-sm text-paper">
+        <input type="checkbox" name="featured" defaultChecked={defaults?.featured} className={adminCheckboxClasses} />
         Featured
       </label>
 
-      <fieldset>
-        <legend>Cover image</legend>
-        {defaults?.coverImage && (
-          <p>
-            Current: <a href={defaults.coverImage}>{defaults.coverImage}</a>
-          </p>
-        )}
-        <input type="file" name="coverImage" accept="image/*" />
-      </fieldset>
+      <div className={adminCardClasses}>
+        <fieldset className="m-0 min-w-0 border-0 p-0">
+          <legend className={adminLegendClasses}>Cover image</legend>
+          {defaults?.coverImage && (
+            <p className="mb-3 truncate text-xs text-paper/50">
+              Current:{' '}
+              <a href={defaults.coverImage} className="underline hover:text-chartreuse">
+                {defaults.coverImage}
+              </a>
+            </p>
+          )}
+          <input type="file" name="coverImage" accept="image/*" className={adminFileInputClasses} />
+        </fieldset>
+      </div>
 
       {existingGallery.length > 0 && (
-        <fieldset>
-          <legend>Existing gallery images</legend>
-          {existingGallery.map((url) => (
-            <label key={url} style={{ display: 'block' }}>
-              <input type="checkbox" name="removeGallery" value={url} />
-              Remove — <a href={url}>{url}</a>
-            </label>
-          ))}
-        </fieldset>
+        <div className={adminCardClasses}>
+          <fieldset className="m-0 min-w-0 border-0 p-0">
+            <legend className={adminLegendClasses}>Existing gallery images</legend>
+            <div className="space-y-2">
+              {existingGallery.map((url) => (
+                <label key={url} className="flex items-center gap-2 text-sm text-paper/80">
+                  <input type="checkbox" name="removeGallery" value={url} className={adminCheckboxClasses} />
+                  <span>
+                    Remove —{' '}
+                    <a href={url} className="truncate underline hover:text-chartreuse">
+                      {url}
+                    </a>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        </div>
       )}
 
-      <fieldset>
-        <legend>Add gallery images</legend>
-        <input type="file" name="gallery" accept="image/*" multiple />
-      </fieldset>
+      <div className={adminCardClasses}>
+        <fieldset className="m-0 min-w-0 border-0 p-0">
+          <legend className={adminLegendClasses}>Add gallery images</legend>
+          <input type="file" name="gallery" accept="image/*" multiple className={adminFileInputClasses} />
+        </fieldset>
+      </div>
 
-      <fieldset>
-        <legend>Links / docs</legend>
-        {linkSlots.map((link, i) => (
-          <div key={i}>
-            <label>
-              Label
-              <input type="text" name={`linkLabel${i}`} defaultValue={link?.label} />
-            </label>
-            <label>
-              URL
-              <input type="url" name={`linkUrl${i}`} defaultValue={link?.url} />
-            </label>
+      <div className={adminCardClasses}>
+        <fieldset className="m-0 min-w-0 border-0 p-0">
+          <legend className={adminLegendClasses}>Links / docs</legend>
+          <div className="space-y-3">
+            {linkSlots.map((link, i) => (
+              <div key={i} className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_2fr]">
+                <input
+                  type="text"
+                  name={`linkLabel${i}`}
+                  defaultValue={link?.label}
+                  placeholder="Label"
+                  aria-label={`Link ${i + 1} label`}
+                  className={adminInputClasses}
+                />
+                <input
+                  type="url"
+                  name={`linkUrl${i}`}
+                  defaultValue={link?.url}
+                  placeholder="URL"
+                  aria-label={`Link ${i + 1} URL`}
+                  className={adminInputClasses}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </fieldset>
+        </fieldset>
+      </div>
 
-      <button type="submit">{submitLabel}</button>
+      <button type="submit" className={adminButtonPrimary}>
+        {submitLabel}
+      </button>
     </form>
   );
 }

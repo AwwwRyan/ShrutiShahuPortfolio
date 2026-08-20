@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { ProjectForm } from '@/components/ProjectForm';
 import { listAllCategoriesFlat } from '@/lib/categories';
 import { getProject, updateProject } from '@/lib/projects';
@@ -30,29 +31,33 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
   }
 
   return (
-    <main>
-      <h1>Edit Project</h1>
-      <p>
-        <a href="/admin/categories">Back to categories</a>
+    <main className="mx-auto max-w-2xl px-6 py-12 sm:px-8">
+      <p className="text-sm text-paper/60">
+        <Link href="/admin/categories" className="hover:text-chartreuse hover:underline">
+          ← Back to categories
+        </Link>
       </p>
-      <ProjectForm
-        action={updateProjectAction}
-        categories={categories}
-        defaultCategoryId={project.categoryId}
-        existingGallery={project.gallery}
-        defaults={{
-          header: project.header,
-          description: project.description,
-          client: project.client ?? undefined,
-          videoUrl: project.videoUrl ?? undefined,
-          externalUrl: project.externalUrl ?? undefined,
-          tags: project.tags,
-          featured: project.featured,
-          links: project.links,
-          coverImage: project.coverImage,
-        }}
-        submitLabel="Save changes"
-      />
+      <h1 className="mt-3 font-serif text-3xl text-paper">Edit Project</h1>
+      <div className="mt-8">
+        <ProjectForm
+          action={updateProjectAction}
+          categories={categories}
+          defaultCategoryId={project.categoryId}
+          existingGallery={project.gallery}
+          defaults={{
+            header: project.header,
+            description: project.description,
+            client: project.client ?? undefined,
+            videoUrl: project.videoUrl ?? undefined,
+            externalUrl: project.externalUrl ?? undefined,
+            tags: project.tags,
+            featured: project.featured,
+            links: project.links,
+            coverImage: project.coverImage,
+          }}
+          submitLabel="Save changes"
+        />
+      </div>
     </main>
   );
 }
