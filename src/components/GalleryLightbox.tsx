@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type TouchEvent } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 type GalleryLightboxProps = {
@@ -12,10 +12,23 @@ type GalleryLightboxProps = {
 export function GalleryLightbox({ images, title }: GalleryLightboxProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const touchStartX = useRef<number | null>(null);
 
   const close = () => setOpenIndex(null);
   const showPrev = () => setOpenIndex((i) => (i === null ? null : (i - 1 + images.length) % images.length));
   const showNext = () => setOpenIndex((i) => (i === null ? null : (i + 1) % images.length));
+
+  const SWIPE_THRESHOLD_PX = 50;
+  const onTouchStart = (event: TouchEvent) => {
+    touchStartX.current = event.touches[0].clientX;
+  };
+  const onTouchEnd = (event: TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const delta = event.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+    if (delta > SWIPE_THRESHOLD_PX) showPrev();
+    else if (delta < -SWIPE_THRESHOLD_PX) showNext();
+  };
 
   useEffect(() => {
     if (openIndex === null) return;
@@ -64,6 +77,8 @@ export function GalleryLightbox({ images, title }: GalleryLightboxProps) {
           aria-label={`${title} — gallery image ${openIndex + 1} of ${images.length}`}
           className="fixed inset-0 z-50 flex items-center justify-center bg-near-black-olive/90 p-4 backdrop-blur-sm sm:p-8"
           onClick={close}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
         >
           <div className="absolute top-4 right-4 flex items-center gap-4 sm:top-6 sm:right-6">
             <span className="text-sm font-medium text-paper/70">

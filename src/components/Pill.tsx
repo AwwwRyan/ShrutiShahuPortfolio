@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 const BASE =
-  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-sans text-sm font-semibold tracking-wide transition-colors duration-200 motion-reduce:transition-none';
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 py-3 font-sans text-xs font-semibold tracking-wide transition-colors duration-200 motion-reduce:transition-none sm:px-6 sm:text-sm';
 
 const TONES = {
   // "dark" now means "the bold, high-contrast pill" — inverted to a light fill so it
