@@ -1,6 +1,7 @@
 import { LINK_SLOTS } from '@/lib/projects';
 import { RichTextEditor } from './RichTextEditor';
 import { CategoryTreeSelect } from './admin/CategoryTreeSelect';
+import { GalleryImagePicker } from './admin/GalleryImagePicker';
 import {
   adminInputClasses,
   adminLabelClasses,
@@ -167,19 +168,7 @@ export function ProjectForm({
         <div className={adminCardClasses}>
           <fieldset className="m-0 min-w-0 border-0 p-0">
             <legend className={adminLegendClasses}>Existing gallery images</legend>
-            <div className="space-y-2">
-              {existingGallery.map((url) => (
-                <label key={url} className="flex items-center gap-2 text-sm text-paper/80">
-                  <input type="checkbox" name="removeGallery" value={url} className={adminCheckboxClasses} />
-                  <span>
-                    Remove —{' '}
-                    <a href={url} className="truncate underline hover:text-chartreuse">
-                      {url}
-                    </a>
-                  </span>
-                </label>
-              ))}
-            </div>
+            <GalleryImagePicker images={existingGallery} />
           </fieldset>
         </div>
       )}
