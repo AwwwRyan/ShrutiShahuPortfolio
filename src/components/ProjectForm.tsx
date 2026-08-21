@@ -32,6 +32,7 @@ export function ProjectForm({
     client?: string;
     videoUrl?: string;
     externalUrl?: string;
+    showDescriptionPage?: boolean;
     tags?: string[];
     featured?: boolean;
     links?: ExistingLink[];
@@ -96,9 +97,8 @@ export function ProjectForm({
         <fieldset className="m-0 min-w-0 border-0 p-0">
           <legend className={adminLegendClasses}>External URL (optional)</legend>
           <p className="mb-3 text-xs text-paper/50">
-            If set, this project&apos;s card links straight here in a new tab instead of its own page — for
-            pieces that are really just a pointer to a client&apos;s own published article, or a PDF hosted
-            here directly.
+            A document or third-party page for this project — a client&apos;s own published article, or a
+            PDF hosted here directly.
           </p>
           <label htmlFor="externalUrl" className={adminLabelClasses}>
             URL
@@ -124,6 +124,22 @@ export function ProjectForm({
             accept="application/pdf,.pdf"
             className={adminFileInputClasses}
           />
+
+          <label className="mt-4 flex items-center gap-2 text-sm text-paper">
+            <input
+              type="checkbox"
+              name="showDescriptionPage"
+              defaultChecked={defaults?.showDescriptionPage ?? true}
+              className={adminCheckboxClasses}
+            />
+            Show this project&apos;s own description page
+          </label>
+          <p className="mt-1.5 text-xs text-paper/50">
+            Only matters when a URL/file is set above. Checked: the card opens this project&apos;s own
+            /project page as usual. Unchecked: the card skips the description page and opens the URL/file
+            above directly instead — the document stays attached either way, so you can flip this without
+            re-uploading anything.
+          </p>
         </fieldset>
       </div>
 

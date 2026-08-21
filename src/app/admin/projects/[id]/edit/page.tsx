@@ -52,6 +52,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
             client: project.client ?? undefined,
             videoUrl: project.videoUrl ?? undefined,
             externalUrl: project.externalUrl ?? undefined,
+            showDescriptionPage: project.showDescriptionPage,
             tags: project.tags,
             featured: project.featured,
             links: project.links,

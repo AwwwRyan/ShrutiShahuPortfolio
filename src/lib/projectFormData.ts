@@ -14,6 +14,7 @@ export function parseProjectFields(
   const client = String(formData.get('client') ?? '').trim() || null;
   const videoUrl = String(formData.get('videoUrl') ?? '').trim() || null;
   const externalUrl = String(formData.get('externalUrl') ?? '').trim() || null;
+  const showDescriptionPage = formData.get('showDescriptionPage') === 'on';
   const featured = formData.get('featured') === 'on';
   const tags = String(formData.get('tags') ?? '')
     .split(',')
@@ -25,7 +26,7 @@ export function parseProjectFields(
     url: String(formData.get(`linkUrl${i}`) ?? ''),
   }));
 
-  return { header, categoryId, description, client, videoUrl, externalUrl, featured, tags, links };
+  return { header, categoryId, description, client, videoUrl, externalUrl, showDescriptionPage, featured, tags, links };
 }
 
 export async function uploadCoverImage(formData: FormData): Promise<string | null> {

@@ -76,27 +76,30 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <section className="mt-12">
           <h2 className="font-serif text-2xl text-paper">Projects</h2>
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <Card
-                key={project.id}
-                href={project.externalUrl || `/project/${project.id}`}
-                external={Boolean(project.externalUrl)}
-                documentTitle={project.header}
-                imageUrl={project.coverImage}
-                tone={CATEGORY_TILE_TONES[index % CATEGORY_TILE_TONES.length]}
-                className="min-h-[14rem]"
-              >
-                {project.featured && (
-                  <span className="mb-3 block w-fit rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-near-black-olive">
-                    ★ Featured
-                  </span>
-                )}
-                <span className="font-serif text-xl">{project.header}</span>
-                {project.client && (
-                  <span className="mt-1 block text-sm opacity-80">{project.client}</span>
-                )}
-              </Card>
-            ))}
+            {projects.map((project, index) => {
+              const opensDirectly = !project.showDescriptionPage && Boolean(project.externalUrl);
+              return (
+                <Card
+                  key={project.id}
+                  href={opensDirectly ? project.externalUrl! : `/project/${project.id}`}
+                  external={opensDirectly}
+                  documentTitle={project.header}
+                  imageUrl={project.coverImage}
+                  tone={CATEGORY_TILE_TONES[index % CATEGORY_TILE_TONES.length]}
+                  className="min-h-[14rem]"
+                >
+                  {project.featured && (
+                    <span className="mb-3 block w-fit rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-near-black-olive">
+                      ★ Featured
+                    </span>
+                  )}
+                  <span className="font-serif text-xl">{project.header}</span>
+                  {project.client && (
+                    <span className="mt-1 block text-sm opacity-80">{project.client}</span>
+                  )}
+                </Card>
+              );
+            })}
           </div>
         </section>
       )}

@@ -24,25 +24,31 @@ model Category {
 }
 
 model Project {
-  id          String        @id @default(cuid())
-  header      String
-  description String
-  coverImage  String?
-  gallery     String[]      @default([])
-  videoUrl    String?
-  /// When set, the project's card links straight here (opened in a new tab) instead of
-  /// its own /project/[id] page — for pieces that are really just a pointer to a
-  /// client's own published article rather than a piece meant to have its own detail page.
-  externalUrl String?
-  client      String?
-  tags        String[]      @default([])
-  featured    Boolean       @default(false)
-  order       Int           @default(0)
-  categoryId  String
-  category    Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  links       ProjectLink[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id                  String        @id @default(cuid())
+  header              String
+  description         String
+  coverImage          String?
+  gallery             String[]      @default([])
+  videoUrl            String?
+  /// When set AND showDescriptionPage is false, the project's card links straight here
+  /// (opened in a new tab / in-app PDF modal) instead of its own /project/[id] page —
+  /// for pieces that are really just a pointer to a client's own published article, or
+  /// a document uploaded to be read directly rather than via a description page.
+  externalUrl         String?
+  /// Whether clicking this project's card opens its own /project/[id] description page
+  /// (true) or, when externalUrl is set, opens externalUrl directly instead (false).
+  /// Decoupled from externalUrl itself so a document can stay attached/uploaded without
+  /// forcing the card to bypass the description page.
+  showDescriptionPage Boolean       @default(true)
+  client              String?
+  tags                String[]      @default([])
+  featured            Boolean       @default(false)
+  order               Int           @default(0)
+  categoryId          String
+  category            Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  links               ProjectLink[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 }
 
 model ProjectLink {
@@ -55,12 +61,12 @@ model ProjectLink {
 }
 
 model AdminUser {
-  id           String                @id @default(cuid())
-  email        String                @unique
+  id           String               @id @default(cuid())
+  email        String               @unique
   passwordHash String
   resetTokens  PasswordResetToken[]
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
 }
 
 model PasswordResetToken {
