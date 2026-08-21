@@ -1,4 +1,5 @@
 import { prisma } from './prisma';
+import { logActivity } from './activityLog';
 
 export async function getSiteContent() {
   return prisma.siteContent.findUnique({ where: { id: 'singleton' } });
@@ -46,9 +47,13 @@ export type SiteContentInput = {
 export async function updateSiteContent(input: SiteContentInput) {
   const socialLinks = input.socialLinks.filter((l) => l.label.trim() && l.url.trim());
 
-  return prisma.siteContent.upsert({
+  const result = await prisma.siteContent.upsert({
     where: { id: 'singleton' },
     create: { id: 'singleton', ...input, socialLinks },
     update: { ...input, socialLinks },
   });
+
+  await logActivity('Updated site content (About Me, contact info, social links)');
+
+  return result;
 }

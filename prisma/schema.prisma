@@ -89,3 +89,14 @@ model SiteContent {
   socialLinks  Json?
   updatedAt    DateTime @updatedAt
 }
+
+/// One human-readable line per admin mutation (category/project/site-content
+/// create/update/delete/reorder), shown as a feed on the dashboard. Visibility
+/// only — deliberately not a full before/after field diff, since that's what
+/// would be needed to support in-app revert, which isn't what this is for
+/// (Neon's own point-in-time restore covers that instead).
+model ActivityLogEntry {
+  id        String   @id @default(cuid())
+  summary   String
+  createdAt DateTime @default(now())
+}

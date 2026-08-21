@@ -1,5 +1,6 @@
 import { prisma } from './prisma';
 import { slugify } from './slugify';
+import { logActivity } from './activityLog';
 
 export type CategoryTreeProject = {
   id: string;
@@ -88,11 +89,22 @@ export async function createCategory(name: string, parentId: string | null): Pro
     data: { name, slug, parentId, order: nextOrder },
   });
 
+  const parentName = parentId
+    ? (await prisma.category.findUnique({ where: { id: parentId }, select: { name: true } }))?.name
+    : null;
+  await logActivity(
+    parentName ? `Created category "${name}" under "${parentName}"` : `Created top-level category "${name}"`,
+  );
+
   return category.id;
 }
 
 export async function renameCategory(id: string, name: string): Promise<void> {
+  const before = await prisma.category.findUniqueOrThrow({ where: { id } });
   await prisma.category.update({ where: { id }, data: { name } });
+  if (before.name !== name) {
+    await logActivity(`Renamed category "${before.name}" to "${name}"`);
+  }
 }
 
 /**
@@ -136,10 +148,19 @@ export async function moveCategory(id: string, newParentId: string | null): Prom
   // See createCategory: max+1 avoids colliding with a surviving sibling's
   // order after deletions, which count-of-siblings does not.
   const maxOrder = await prisma.category.aggregate({ where: { parentId: newParentId }, _max: { order: true } });
-  await prisma.category.update({
+  const category = await prisma.category.update({
     where: { id },
     data: { parentId: newParentId, order: (maxOrder._max.order ?? -1) + 1 },
   });
+
+  const newParentName = newParentId
+    ? (await prisma.category.findUnique({ where: { id: newParentId }, select: { name: true } }))?.name
+    : null;
+  await logActivity(
+    newParentName
+      ? `Moved category "${category.name}" under "${newParentName}"`
+      : `Moved category "${category.name}" to top level`,
+  );
 }
 
 export async function reorderCategories(parentId: string | null, orderedIds: string[]): Promise<void> {
@@ -177,6 +198,8 @@ export async function moveSibling(id: string, direction: 'up' | 'down'): Promise
   await prisma.$transaction(
     reordered.map((s, i) => prisma.category.update({ where: { id: s.id }, data: { order: i } })),
   );
+
+  await logActivity(`Reordered category "${category.name}" (moved ${direction})`);
 }
 
 export type CategoryDeleteOptions =
@@ -191,8 +214,17 @@ export class MoveTargetRequiredError extends Error {
 }
 
 export async function deleteCategory(id: string, options: CategoryDeleteOptions): Promise<void> {
+  const category = await prisma.category.findUniqueOrThrow({ where: { id } });
+
   if (options.mode === 'cascade') {
+    const childCount = await prisma.category.count({ where: { parentId: id } });
+    const projectCount = await prisma.project.count({ where: { categoryId: id } });
     await prisma.category.delete({ where: { id } });
+    const details =
+      childCount || projectCount
+        ? ` (${childCount} subcategor${childCount === 1 ? 'y' : 'ies'}, ${projectCount} project${projectCount === 1 ? '' : 's'})`
+        : '';
+    await logActivity(`Deleted category "${category.name}"${details}`);
     return;
   }
 
@@ -228,6 +260,13 @@ export async function deleteCategory(id: string, options: CategoryDeleteOptions)
   }
 
   await prisma.category.delete({ where: { id } });
+
+  const targetName = options.targetParentId
+    ? (await prisma.category.findUnique({ where: { id: options.targetParentId }, select: { name: true } }))?.name
+    : null;
+  await logActivity(
+    `Deleted category "${category.name}", moved its contents to ${targetName ? `"${targetName}"` : 'top level'}`,
+  );
 }
 
 export async function getCategoryWithCounts(id: string) {

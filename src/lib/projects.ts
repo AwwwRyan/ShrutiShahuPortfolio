@@ -1,4 +1,5 @@
 import { prisma } from './prisma';
+import { logActivity } from './activityLog';
 
 /** Number of label/url link slots the admin form renders. See ProjectForm. */
 export const LINK_SLOTS = 6;
@@ -69,6 +70,8 @@ export async function createProject(input: ProjectInput): Promise<string> {
     },
   });
 
+  await logActivity(`Created project "${project.header}"`);
+
   return project.id;
 }
 
@@ -99,10 +102,14 @@ export async function updateProject(id: string, input: ProjectInput): Promise<vo
       },
     }),
   ]);
+
+  await logActivity(`Updated project "${input.header.trim()}"`);
 }
 
 export async function deleteProject(id: string): Promise<void> {
+  const project = await prisma.project.findUniqueOrThrow({ where: { id } });
   await prisma.project.delete({ where: { id } });
+  await logActivity(`Deleted project "${project.header}"`);
 }
 
 export async function getProject(id: string) {
@@ -122,7 +129,8 @@ export async function listProjectsByCategory(categoryId: string) {
 
 export async function toggleFeatured(id: string): Promise<void> {
   const project = await prisma.project.findUniqueOrThrow({ where: { id } });
-  await prisma.project.update({ where: { id }, data: { featured: !project.featured } });
+  const updated = await prisma.project.update({ where: { id }, data: { featured: !project.featured } });
+  await logActivity(`${updated.featured ? 'Featured' : 'Unfeatured'} project "${updated.header}"`);
 }
 
 /**
@@ -150,4 +158,6 @@ export async function moveProjectSibling(id: string, direction: 'up' | 'down'): 
   await prisma.$transaction(
     reordered.map((s, i) => prisma.project.update({ where: { id: s.id }, data: { order: i } })),
   );
+
+  await logActivity(`Reordered project "${project.header}" (moved ${direction})`);
 }
