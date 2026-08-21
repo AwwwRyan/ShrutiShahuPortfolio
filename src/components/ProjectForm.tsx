@@ -1,5 +1,6 @@
 import { LINK_SLOTS } from '@/lib/projects';
 import { RichTextEditor } from './RichTextEditor';
+import { CategoryTreeSelect } from './admin/CategoryTreeSelect';
 import {
   adminInputClasses,
   adminLabelClasses,
@@ -10,7 +11,7 @@ import {
   adminCheckboxClasses,
 } from '@/lib/adminStyles';
 
-type CategoryOption = { id: string; name: string };
+type CategoryOption = { id: string; name: string; parentId: string | null; order: number };
 
 type ExistingLink = { label: string; url: string };
 
@@ -57,27 +58,7 @@ export function ProjectForm({
         />
       </div>
 
-      <div>
-        <label htmlFor="categoryId" className={adminLabelClasses}>
-          Category
-        </label>
-        <select
-          id="categoryId"
-          name="categoryId"
-          defaultValue={defaultCategoryId}
-          required
-          className={adminInputClasses}
-        >
-          <option value="" disabled>
-            Choose a category…
-          </option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      <CategoryTreeSelect categories={categories} defaultCategoryId={defaultCategoryId} />
 
       <div>
         <span className={adminLabelClasses}>Description</span>
