@@ -107,10 +107,21 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </section>
       )}
 
-      {project.links.length > 0 && (
+      {(project.links.length > 0 || (project.showDescriptionPage && project.externalUrl)) && (
         <section className="mt-12">
           <h2 className="font-serif text-2xl text-paper">Links</h2>
           <ul className="mt-4 flex flex-wrap gap-3">
+            {project.showDescriptionPage && project.externalUrl && (
+              <li>
+                <DocumentLink
+                  href={project.externalUrl}
+                  title={project.header}
+                  className="inline-flex items-center gap-2 rounded-full border border-paper/15 bg-paper/[0.06] px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:border-chartreuse hover:text-chartreuse motion-reduce:transition-none"
+                >
+                  View document
+                </DocumentLink>
+              </li>
+            )}
             {project.links.map((link) => (
               <li key={link.id}>
                 <DocumentLink
