@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ProjectForm } from '@/components/ProjectForm';
 import { listAllCategoriesFlat } from '@/lib/categories';
 import { getProject, updateProject } from '@/lib/projects';
-import { parseProjectFields, uploadCoverImage, uploadExternalDoc, uploadGalleryImages } from '@/lib/projectFormData';
+import { parseProjectFields } from '@/lib/projectFormData';
 
 export default async function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -13,20 +13,13 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
     'use server';
 
     const fields = parseProjectFields(formData);
-    const [newCoverImage, newGalleryImages, newExternalDoc] = await Promise.all([
-      uploadCoverImage(formData),
-      uploadGalleryImages(formData),
-      uploadExternalDoc(formData),
-    ]);
-
     const removedGallery = new Set(formData.getAll('removeGallery').map(String));
     const keptGallery = project.gallery.filter((url) => !removedGallery.has(url));
 
     await updateProject(id, {
       ...fields,
-      externalUrl: newExternalDoc ?? fields.externalUrl,
-      coverImage: newCoverImage ?? project.coverImage,
-      gallery: [...keptGallery, ...newGalleryImages],
+      coverImage: fields.coverImage ?? project.coverImage,
+      gallery: [...keptGallery, ...(fields.gallery ?? [])],
     });
 
     redirect('/admin/categories');

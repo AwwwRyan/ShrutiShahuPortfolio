@@ -2,13 +2,13 @@ import { LINK_SLOTS } from '@/lib/projects';
 import { RichTextEditor } from './RichTextEditor';
 import { CategoryTreeSelect } from './admin/CategoryTreeSelect';
 import { GalleryImagePicker } from './admin/GalleryImagePicker';
+import { SingleFileUpload, MultiFileUpload } from './admin/FileUpload';
 import {
   adminInputClasses,
   adminLabelClasses,
   adminCardClasses,
   adminLegendClasses,
   adminButtonPrimary,
-  adminFileInputClasses,
   adminCheckboxClasses,
 } from '@/lib/adminStyles';
 
@@ -118,13 +118,7 @@ export function ProjectForm({
           <p className="mb-1.5 text-xs text-paper/50">
             Uploading a file here overrides the URL above with the newly-uploaded file&apos;s address.
           </p>
-          <input
-            type="file"
-            id="externalDoc"
-            name="externalDoc"
-            accept="application/pdf,.pdf"
-            className={adminFileInputClasses}
-          />
+          <SingleFileUpload id="externalDoc" name="externalDoc" accept="application/pdf,.pdf" folder="projects/docs" />
 
           <label className="mt-4 flex items-center gap-2 text-sm text-paper">
             <input
@@ -160,7 +154,7 @@ export function ProjectForm({
               </a>
             </p>
           )}
-          <input type="file" name="coverImage" accept="image/*" className={adminFileInputClasses} />
+          <SingleFileUpload name="coverImage" accept="image/*" folder="projects/covers" />
         </fieldset>
       </div>
 
@@ -176,7 +170,7 @@ export function ProjectForm({
       <div className={adminCardClasses}>
         <fieldset className="m-0 min-w-0 border-0 p-0">
           <legend className={adminLegendClasses}>Add gallery images</legend>
-          <input type="file" name="gallery" accept="image/*" multiple className={adminFileInputClasses} />
+          <MultiFileUpload name="gallery" accept="image/*" folder="projects/gallery" />
         </fieldset>
       </div>
 
