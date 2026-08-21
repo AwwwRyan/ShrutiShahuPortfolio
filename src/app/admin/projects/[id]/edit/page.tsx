@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { ProjectForm } from '@/components/ProjectForm';
 import { listAllCategoriesFlat } from '@/lib/categories';
 import { getProject, updateProject } from '@/lib/projects';
-import { parseProjectFields, uploadCoverImage, uploadGalleryImages } from '@/lib/projectFormData';
+import { parseProjectFields, uploadCoverImage, uploadExternalDoc, uploadGalleryImages } from '@/lib/projectFormData';
 
 export default async function EditProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -13,9 +13,10 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
     'use server';
 
     const fields = parseProjectFields(formData);
-    const [newCoverImage, newGalleryImages] = await Promise.all([
+    const [newCoverImage, newGalleryImages, newExternalDoc] = await Promise.all([
       uploadCoverImage(formData),
       uploadGalleryImages(formData),
+      uploadExternalDoc(formData),
     ]);
 
     const removedGallery = new Set(formData.getAll('removeGallery').map(String));
@@ -23,6 +24,7 @@ export default async function EditProjectPage({ params }: { params: Promise<{ id
 
     await updateProject(id, {
       ...fields,
+      externalUrl: newExternalDoc ?? fields.externalUrl,
       coverImage: newCoverImage ?? project.coverImage,
       gallery: [...keptGallery, ...newGalleryImages],
     });

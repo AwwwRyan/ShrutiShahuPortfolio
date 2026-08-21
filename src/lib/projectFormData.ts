@@ -38,3 +38,9 @@ export async function uploadGalleryImages(formData: FormData): Promise<string[]>
   const urls = await Promise.all(files.map((f) => uploadFile(f, 'projects/gallery')));
   return urls.filter((u): u is string => u !== null);
 }
+
+/** A new file here overrides whatever's typed into the External URL text field. */
+export async function uploadExternalDoc(formData: FormData): Promise<string | null> {
+  const file = formData.get('externalDoc');
+  return uploadFile(file instanceof File ? file : null, 'projects/docs');
+}

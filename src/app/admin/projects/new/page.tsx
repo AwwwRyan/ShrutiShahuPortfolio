@@ -3,18 +3,19 @@ import Link from 'next/link';
 import { ProjectForm } from '@/components/ProjectForm';
 import { listAllCategoriesFlat } from '@/lib/categories';
 import { createProject } from '@/lib/projects';
-import { parseProjectFields, uploadCoverImage, uploadGalleryImages } from '@/lib/projectFormData';
+import { parseProjectFields, uploadCoverImage, uploadExternalDoc, uploadGalleryImages } from '@/lib/projectFormData';
 
 async function createProjectAction(formData: FormData) {
   'use server';
 
   const fields = parseProjectFields(formData);
-  const [coverImage, gallery] = await Promise.all([
+  const [coverImage, gallery, externalDoc] = await Promise.all([
     uploadCoverImage(formData),
     uploadGalleryImages(formData),
+    uploadExternalDoc(formData),
   ]);
 
-  await createProject({ ...fields, coverImage, gallery });
+  await createProject({ ...fields, externalUrl: externalDoc ?? fields.externalUrl, coverImage, gallery });
 
   redirect('/admin/categories');
 }

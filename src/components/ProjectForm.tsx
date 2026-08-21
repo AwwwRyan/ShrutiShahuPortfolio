@@ -92,21 +92,39 @@ export function ProjectForm({
         <input type="url" id="videoUrl" name="videoUrl" defaultValue={defaults?.videoUrl} className={adminInputClasses} />
       </div>
 
-      <div>
-        <label htmlFor="externalUrl" className={adminLabelClasses}>
-          External URL (optional)
-        </label>
-        <p className="mb-1.5 text-xs text-paper/50">
-          If set, this project&apos;s card links straight here in a new tab instead of its own page — for
-          pieces that are really just a pointer to a client&apos;s own published article.
-        </p>
-        <input
-          type="url"
-          id="externalUrl"
-          name="externalUrl"
-          defaultValue={defaults?.externalUrl}
-          className={adminInputClasses}
-        />
+      <div className={adminCardClasses}>
+        <fieldset className="m-0 min-w-0 border-0 p-0">
+          <legend className={adminLegendClasses}>External URL (optional)</legend>
+          <p className="mb-3 text-xs text-paper/50">
+            If set, this project&apos;s card links straight here in a new tab instead of its own page — for
+            pieces that are really just a pointer to a client&apos;s own published article, or a PDF hosted
+            here directly.
+          </p>
+          <label htmlFor="externalUrl" className={adminLabelClasses}>
+            URL
+          </label>
+          <input
+            type="url"
+            id="externalUrl"
+            name="externalUrl"
+            defaultValue={defaults?.externalUrl}
+            className={adminInputClasses}
+          />
+
+          <label htmlFor="externalDoc" className={`mt-4 block ${adminLabelClasses}`}>
+            Or replace it by uploading a new file
+          </label>
+          <p className="mb-1.5 text-xs text-paper/50">
+            Uploading a file here overrides the URL above with the newly-uploaded file&apos;s address.
+          </p>
+          <input
+            type="file"
+            id="externalDoc"
+            name="externalDoc"
+            accept="application/pdf,.pdf"
+            className={adminFileInputClasses}
+          />
+        </fieldset>
       </div>
 
       <label className="flex items-center gap-2 text-sm text-paper">
