@@ -3,7 +3,7 @@ import { Motif } from '@/components/decor/Motif';
 const STATS = [
   { value: '4+', label: 'Years experience' },
   { value: '80k+', label: 'Impressions & reads' },
-  { value: '15+', label: 'Writers trained' },
+  { value: '20+', label: 'Writers trained' },
   { value: '20+', label: 'Clients' },
 ] as const;
 
