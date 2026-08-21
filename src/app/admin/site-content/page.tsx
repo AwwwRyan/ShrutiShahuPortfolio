@@ -11,6 +11,7 @@ import {
   adminFileInputClasses,
   adminStatusClasses,
 } from '@/lib/adminStyles';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 async function updateSiteContentAction(formData: FormData) {
   'use server';
@@ -145,9 +146,7 @@ export default async function SiteContentAdminPage({
           </fieldset>
         </div>
 
-        <button type="submit" className={adminButtonPrimary}>
-          Save
-        </button>
+        <AdminSubmitButton className={adminButtonPrimary}>Save</AdminSubmitButton>
       </form>
     </main>
   );

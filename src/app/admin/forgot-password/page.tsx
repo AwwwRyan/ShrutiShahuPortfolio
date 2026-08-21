@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createPasswordResetToken } from '@/lib/passwordReset';
 import { sendPasswordResetEmail } from '@/lib/email';
 import { adminInputClasses, adminLabelClasses, adminButtonPrimary, adminStatusClasses } from '@/lib/adminStyles';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 async function forgotPasswordAction(formData: FormData) {
   'use server';
@@ -52,9 +53,7 @@ export default async function ForgotPasswordPage({
                 className={adminInputClasses}
               />
             </div>
-            <button type="submit" className={`w-full ${adminButtonPrimary}`}>
-              Send reset link
-            </button>
+            <AdminSubmitButton className={`w-full ${adminButtonPrimary}`}>Send reset link</AdminSubmitButton>
           </form>
         )}
 

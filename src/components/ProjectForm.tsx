@@ -3,6 +3,7 @@ import { RichTextEditor } from './RichTextEditor';
 import { CategoryTreeSelect } from './admin/CategoryTreeSelect';
 import { GalleryImagePicker } from './admin/GalleryImagePicker';
 import { SingleFileUpload, MultiFileUpload } from './admin/FileUpload';
+import { AdminSubmitButton } from './admin/AdminSubmitButton';
 import {
   adminInputClasses,
   adminLabelClasses,
@@ -202,9 +203,7 @@ export function ProjectForm({
         </fieldset>
       </div>
 
-      <button type="submit" className={adminButtonPrimary}>
-        {submitLabel}
-      </button>
+      <AdminSubmitButton className={adminButtonPrimary}>{submitLabel}</AdminSubmitButton>
     </form>
   );
 }

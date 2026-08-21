@@ -22,17 +22,17 @@ export const adminButtonPrimary =
   'inline-flex items-center justify-center gap-2 rounded-full bg-chartreuse px-6 py-3 text-sm font-semibold text-near-black-olive transition-colors hover:bg-paper disabled:cursor-not-allowed disabled:opacity-60';
 
 export const adminButtonSecondary =
-  'inline-flex items-center justify-center gap-1.5 rounded-full border border-paper/20 px-3 py-1.5 text-xs font-medium text-paper/80 transition-colors hover:border-paper/40 hover:text-paper sm:text-sm';
+  'inline-flex items-center justify-center gap-1.5 rounded-full border border-paper/20 px-3 py-1.5 text-xs font-medium text-paper/80 transition-colors hover:border-paper/40 hover:text-paper disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm';
 
 /** Square icon-only button — reorder chevrons, featured star. */
 export const adminIconButtonClasses =
   'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-paper/15 text-paper/70 transition-colors hover:border-chartreuse hover:text-chartreuse disabled:pointer-events-none disabled:opacity-30';
 
 export const adminButtonDanger =
-  'inline-flex items-center justify-center gap-2 rounded-full bg-rust px-6 py-3 text-sm font-semibold text-near-black-olive transition hover:brightness-110';
+  'inline-flex items-center justify-center gap-2 rounded-full bg-rust px-6 py-3 text-sm font-semibold text-near-black-olive transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60';
 
 export const adminButtonDangerGhost =
-  'inline-flex items-center gap-1 text-xs font-medium text-rust hover:underline';
+  'inline-flex items-center gap-1 text-xs font-medium text-rust hover:underline disabled:cursor-not-allowed disabled:opacity-50';
 
 /** Restyles just the native file-picker button via Tailwind's real file: pseudo-element variant — no JS. */
 export const adminFileInputClasses =

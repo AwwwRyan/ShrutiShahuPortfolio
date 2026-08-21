@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { deleteProject, getProject } from '@/lib/projects';
 import { adminButtonDanger } from '@/lib/adminStyles';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 export default async function DeleteProjectPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -22,9 +23,7 @@ export default async function DeleteProjectPage({ params }: { params: Promise<{ 
       <div className="mt-6 rounded-2xl border border-rust/30 bg-rust/5 p-6">
         <p className="text-paper/80">This cannot be undone.</p>
         <form action={deleteProjectAction} className="mt-4">
-          <button type="submit" className={adminButtonDanger}>
-            Delete project
-          </button>
+          <AdminSubmitButton className={adminButtonDanger}>Delete project</AdminSubmitButton>
         </form>
       </div>
 

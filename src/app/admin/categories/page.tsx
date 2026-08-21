@@ -21,6 +21,7 @@ import {
   adminButtonDangerGhost,
   adminAlertClasses,
 } from '@/lib/adminStyles';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 // This page has no dynamic API usage (no auth()/searchParams) of its own,
 // so Next.js would otherwise statically prerender it at build time and
@@ -123,16 +124,16 @@ function CategoryNode({
           <form action={moveSiblingAction}>
             <input type="hidden" name="id" value={node.id} />
             <input type="hidden" name="direction" value="up" />
-            <button type="submit" aria-label="Move up" className={adminIconButtonClasses}>
+            <AdminSubmitButton ariaLabel="Move up" className={adminIconButtonClasses}>
               <ChevronUp className="h-4 w-4" aria-hidden="true" />
-            </button>
+            </AdminSubmitButton>
           </form>
           <form action={moveSiblingAction}>
             <input type="hidden" name="id" value={node.id} />
             <input type="hidden" name="direction" value="down" />
-            <button type="submit" aria-label="Move down" className={adminIconButtonClasses}>
+            <AdminSubmitButton ariaLabel="Move down" className={adminIconButtonClasses}>
               <ChevronDown className="h-4 w-4" aria-hidden="true" />
-            </button>
+            </AdminSubmitButton>
           </form>
           <Link href={`/admin/projects/new?categoryId=${node.id}`} className={adminButtonSecondary}>
             Add project
@@ -147,9 +148,7 @@ function CategoryNode({
         <form action={renameCategoryAction} className="flex items-center gap-2">
           <input type="hidden" name="id" value={node.id} />
           <input type="text" name="name" defaultValue={node.name} required className={smallInputClasses} />
-          <button type="submit" className={adminButtonSecondary}>
-            Rename
-          </button>
+          <AdminSubmitButton className={adminButtonSecondary}>Rename</AdminSubmitButton>
         </form>
         <form action={moveCategoryAction} className="flex items-center gap-2">
           <input type="hidden" name="id" value={node.id} />
@@ -161,9 +160,7 @@ function CategoryNode({
               </option>
             ))}
           </select>
-          <button type="submit" className={adminButtonSecondary}>
-            Move here
-          </button>
+          <AdminSubmitButton className={adminButtonSecondary}>Move here</AdminSubmitButton>
         </form>
         <form action={createCategoryAction} className="flex items-center gap-2">
           <input type="hidden" name="parentId" value={node.id} />
@@ -174,9 +171,7 @@ function CategoryNode({
             required
             className={smallInputClasses}
           />
-          <button type="submit" className={adminButtonSecondary}>
-            Add subcategory
-          </button>
+          <AdminSubmitButton className={adminButtonSecondary}>Add subcategory</AdminSubmitButton>
         </form>
       </div>
 
@@ -192,30 +187,29 @@ function CategoryNode({
                   <form action={moveProjectSiblingAction}>
                     <input type="hidden" name="id" value={project.id} />
                     <input type="hidden" name="direction" value="up" />
-                    <button type="submit" aria-label="Move up" className={adminIconButtonClasses}>
+                    <AdminSubmitButton ariaLabel="Move up" className={adminIconButtonClasses}>
                       <ChevronUp className="h-4 w-4" aria-hidden="true" />
-                    </button>
+                    </AdminSubmitButton>
                   </form>
                   <form action={moveProjectSiblingAction}>
                     <input type="hidden" name="id" value={project.id} />
                     <input type="hidden" name="direction" value="down" />
-                    <button type="submit" aria-label="Move down" className={adminIconButtonClasses}>
+                    <AdminSubmitButton ariaLabel="Move down" className={adminIconButtonClasses}>
                       <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                    </button>
+                    </AdminSubmitButton>
                   </form>
                   <form action={toggleFeaturedAction}>
                     <input type="hidden" name="id" value={project.id} />
-                    <button
-                      type="submit"
-                      aria-label={project.featured ? 'Unfeature' : 'Feature'}
-                      aria-pressed={project.featured}
+                    <AdminSubmitButton
+                      ariaLabel={project.featured ? 'Unfeature' : 'Feature'}
+                      ariaPressed={project.featured}
                       className={adminIconButtonClasses}
                     >
                       <Star
                         className={`h-4 w-4 ${project.featured ? 'fill-chartreuse text-chartreuse' : ''}`}
                         aria-hidden="true"
                       />
-                    </button>
+                    </AdminSubmitButton>
                   </form>
                   <Link href={`/admin/projects/${project.id}/edit`} className={adminButtonSecondary}>
                     Edit
@@ -275,9 +269,7 @@ export default async function CategoriesAdminPage({
           required
           className={`max-w-sm ${adminInputClasses}`}
         />
-        <button type="submit" className={adminButtonPrimary}>
-          Add top-level category
-        </button>
+        <AdminSubmitButton className={adminButtonPrimary}>Add top-level category</AdminSubmitButton>
       </form>
 
       {sortedTree.length === 0 ? (

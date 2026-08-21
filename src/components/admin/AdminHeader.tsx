@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { auth, signOut } from '@/auth';
 import { AdminNav } from './AdminNav';
+import { AdminSubmitButton } from './AdminSubmitButton';
+import { adminButtonSecondary } from '@/lib/adminStyles';
 
 /** Calls auth() itself — same independent-data-fetch pattern as the public Footer.tsx calling getSiteContent(). */
 export async function AdminHeader() {
@@ -26,12 +28,7 @@ export async function AdminHeader() {
                   await signOut({ redirectTo: '/admin/login' });
                 }}
               >
-                <button
-                  type="submit"
-                  className="rounded-full border border-paper/20 px-3 py-1.5 text-xs font-medium text-paper/80 transition-colors hover:border-paper/40 hover:text-paper sm:text-sm"
-                >
-                  Log out
-                </button>
+                <AdminSubmitButton className={adminButtonSecondary}>Log out</AdminSubmitButton>
               </form>
             </div>
           </div>

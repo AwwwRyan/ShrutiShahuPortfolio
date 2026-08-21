@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { AuthError } from 'next-auth';
 import { signIn } from '@/auth';
 import { adminInputClasses, adminLabelClasses, adminButtonPrimary, adminAlertClasses, adminStatusClasses } from '@/lib/adminStyles';
+import { PasswordInput } from '@/components/admin/PasswordInput';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 async function loginAction(formData: FormData) {
   'use server';
@@ -69,18 +71,9 @@ export default async function AdminLoginPage({
             <label htmlFor="password" className={adminLabelClasses}>
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              autoComplete="current-password"
-              className={adminInputClasses}
-            />
+            <PasswordInput id="password" name="password" required autoComplete="current-password" />
           </div>
-          <button type="submit" className={`w-full ${adminButtonPrimary}`}>
-            Log in
-          </button>
+          <AdminSubmitButton className={`w-full ${adminButtonPrimary}`}>Log in</AdminSubmitButton>
         </form>
 
         <p className="mt-6 text-center text-sm">

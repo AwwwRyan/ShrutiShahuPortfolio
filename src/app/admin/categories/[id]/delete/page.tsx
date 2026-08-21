@@ -8,6 +8,7 @@ import {
   listAllCategoriesFlat,
 } from '@/lib/categories';
 import { adminInputClasses, adminButtonSecondary, adminButtonDanger, adminAlertClasses } from '@/lib/adminStyles';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 async function deleteCategoryAction(formData: FormData) {
   'use server';
@@ -85,9 +86,9 @@ export default async function DeleteCategoryPage({
             <form action={deleteCategoryAction} className="mt-5">
               <input type="hidden" name="id" value={id} />
               <input type="hidden" name="mode" value="cascade" />
-              <button type="submit" className={adminButtonDanger}>
+              <AdminSubmitButton className={adminButtonDanger}>
                 Delete everything (category, subcategories, and projects)
-              </button>
+              </AdminSubmitButton>
             </form>
 
             <form action={deleteCategoryAction} className="mt-4 space-y-2">
@@ -106,9 +107,9 @@ export default async function DeleteCategoryPage({
                   </option>
                 ))}
               </select>
-              <button type="submit" className={adminButtonSecondary}>
+              <AdminSubmitButton className={adminButtonSecondary}>
                 Move contents here, then delete this category
-              </button>
+              </AdminSubmitButton>
             </form>
           </>
         ) : (
@@ -116,9 +117,7 @@ export default async function DeleteCategoryPage({
             <input type="hidden" name="id" value={id} />
             <input type="hidden" name="mode" value="cascade" />
             <p className="text-paper/80">This category is empty.</p>
-            <button type="submit" className={`mt-4 ${adminButtonDanger}`}>
-              Delete
-            </button>
+            <AdminSubmitButton className={`mt-4 ${adminButtonDanger}`}>Delete</AdminSubmitButton>
           </form>
         )}
       </div>

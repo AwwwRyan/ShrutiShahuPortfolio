@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { resetPasswordWithToken } from '@/lib/passwordReset';
-import { adminInputClasses, adminLabelClasses, adminButtonPrimary, adminAlertClasses } from '@/lib/adminStyles';
+import { adminLabelClasses, adminButtonPrimary, adminAlertClasses } from '@/lib/adminStyles';
+import { PasswordInput } from '@/components/admin/PasswordInput';
+import { AdminSubmitButton } from '@/components/admin/AdminSubmitButton';
 
 async function resetPasswordAction(formData: FormData) {
   'use server';
@@ -82,31 +84,15 @@ export default async function ResetPasswordPage({
             <label htmlFor="password" className={adminLabelClasses}>
               New password
             </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              autoComplete="new-password"
-              className={adminInputClasses}
-            />
+            <PasswordInput id="password" name="password" required autoComplete="new-password" />
           </div>
           <div>
             <label htmlFor="confirmPassword" className={adminLabelClasses}>
               Confirm new password
             </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              required
-              autoComplete="new-password"
-              className={adminInputClasses}
-            />
+            <PasswordInput id="confirmPassword" name="confirmPassword" required autoComplete="new-password" />
           </div>
-          <button type="submit" className={`w-full ${adminButtonPrimary}`}>
-            Set new password
-          </button>
+          <AdminSubmitButton className={`w-full ${adminButtonPrimary}`}>Set new password</AdminSubmitButton>
         </form>
       </div>
     </main>
