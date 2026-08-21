@@ -58,7 +58,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       {children.length > 0 && (
         <section className="mt-12">
           <h2 className="font-serif text-2xl text-paper">Subcategories</h2>
-          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {children.map((child, index) => (
               <Card
                 key={child.id}
